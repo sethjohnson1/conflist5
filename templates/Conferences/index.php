@@ -189,6 +189,7 @@ else {
 <?php
   echo $this->Form->create(null);
   //the multi-select happens magically because of the HABTM and the variable $tags
+  /*
   echo $this->Form->input('Tag',array(
     'label'=>'Subject tags',
     'value'=>$tagids,
@@ -197,13 +198,27 @@ else {
     'after' => $this->Html->link(
       'Update tag selection', array('controller'=>'Conferences','action'=>$tagstring), array('id'=>'tag_link')),
     'div'=>array('style'=>'display:none','id'=>'tagSelectDiv')
-  ));
+  ));*/
+
+  $form_wrapper = [
+      'inputContainer' => '<div id="tagSelectDiv" style="display:none;" class=" {{type}}{{required}}">{{content}}</div>',
+  ];
+  $this->Form->setTemplates($form_wrapper);
+  //sj new form
+  echo $this->Form->control('Tag',[
+    'options'=>$tag_dropdown,
+    'multiple',
+    'value'=>$stags,
+    'label'=>'Subject Tags',
+    'name'=>'tag_select',
+    'onchange'=>"updateTagLink('".$this->Url->build(['controller'=>'Conferences','action'=>'index'])."/');",
+    
+  ]);
   //disables the SecurityComponent
   //$this->Form->unlockField('Tag');
   echo $this->Form->end();
 
-  //echo $this->Html->link(
-  //'Update tag selection', array('controller'=>'Conferences','action'=>$tagstring), array('id'=>'tag_link'));
+  echo $this->Html->link('Update tag selection', ['controller'=>'Conferences',$tagstring], ['id'=>'tag_link']);
 ?>
 <script>
 <!--

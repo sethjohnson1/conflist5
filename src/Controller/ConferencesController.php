@@ -25,15 +25,50 @@ class ConferencesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index()
+    public function index($tagstring=null)
     {
-        $query = $this->Conferences->find()->contain(['Tags'])->order(['start_date DESC']);
-        $conferences = $this->paginate($query);
+        $view_title='Upcoming Meetings';
+        $query = $this->Conferences->find()->contain(['Tags'])->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))]);
 
-        $qtags=$this->Conferences->Tags->find('all');
-        $tags = $this->paginate($qtags);
+        if ($tagstring!==null){
+            //pass this to select box to select values
+            $stags=explode('-',$tagstring);
+            $where=[];
+            //make a "where" array
+            foreach ($stags as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];
+            //can't figure out how to pass a param to that \Cake\ORM fx.. use a global!
+            //perhaps this is better done as a custom finder
+            global $conf_tag_where;
+            $conf_tag_where=$where;
+            
+            $query=$this->Conferences->find()->matching('Tags',function (\Cake\ORM\Query $q){
+                global $conf_tag_where;
+                return $q->where(['OR'=>$conf_tag_where]);
+            })->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))])->distinct(['Conferences.id'])->contain(['Tags']);
+        }
+
+        $conferences = $this->paginate($query);
         //debug($conferences);
-        $this->set(compact('conferences','tags'));
+        $qtags=$this->Conferences->Tags->find('all');
+        $tags = $qtags->toArray();
+        $tag_dropdown=[];
+        foreach ($tags as $tag) {
+            $key=$this->tag_shortname($tag->name);
+            if ($key) $tag_dropdown[$key]=$tag->name;
+        }
+        //debug($conferences);
+        $this->set(compact('conferences','tags','view_title','tag_dropdown','tagstring','stags'));
+    }
+
+    //$tagname= String, returns two letter 'at' from something like at.algebraic-topology
+    function tag_shortname($tagname){
+        $return=false;
+        $tar=explode('.',$tagname);
+        //is valid
+        if (\is_array($tar) && count($tar)==2){
+            $return=$tar[0];
+        }
+        return $return;
     }
 
     /**

@@ -56,6 +56,8 @@ return function (RouteBuilder $routes): void {
          * to use (in this case, templates/Pages/home.php)...
          */
         $builder->connect('/', ['controller' => 'Conferences', 'action' => 'index']);
+        $builder->connect('/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
+        $builder->connect('/conferences/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
 
         /*
          * ...and connect the rest of 'Pages' controller's URLs.
