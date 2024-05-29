@@ -290,7 +290,7 @@ if ($new_subsort != $curr_subsort) {
 <div class="calendars">
 <?php  echo
   $this->Html->link('Google calendar',
- // $this->Gcal->gcal($conference),
+  $this->Gcal->gcal($conference),
   array('escape' => false,'class'=>'ics button'));
 echo ' ';
 echo

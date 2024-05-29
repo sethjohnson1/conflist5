@@ -26,13 +26,11 @@ echo $this->Html->link($conference['title'], $conference['homepage']);
 <?php  
 echo
   $this->Html->link('Google calendar',
- // $this->Gcal->gcal($conference),
+  $this->Gcal->gcal($conference),
   array('escape' => false,'class'=>'ics button'));
 
 echo
-  $this->Html->link('iCalendar .ics',
-  array('action'=>'view/'.$conference['id'].'.ics'),
-  array('escape' => false,'class'=>'ics button'));
+  $this->Html->link('iCalendar .ics',['action'=>'view',$conference['id'],'_ext'=>'ics'], ['escape' => false,'class'=>'ics button']);
 ?>
 </div>
 

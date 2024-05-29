@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use Cake\Controller\Controller\ModelAwareTrait;
+use Cake\View\JsonView;
+use Cake\View\XmlView;
+
 /**
  * Conferences Controller
  *
@@ -10,7 +13,12 @@ use Cake\Controller\Controller\ModelAwareTrait;
  */
 class ConferencesController extends AppController
 {
-
+    /*
+    this enables .json and .xml but disables the regular view ??
+    public function viewClasses(): array{
+        return [JsonView::class, XmlView::class];
+    }
+*/
     public function beforeFilter(\Cake\Event\EventInterface $event) {
         parent::beforeFilter($event); //you're supposed to always have this, don't ask me why
        // $tags=$this->fetchModel('Tags');
@@ -19,6 +27,18 @@ class ConferencesController extends AppController
         $this->set('tagids',array());
         //$this->Security->csrfCheck = false;
         //$this->Security->blackHoleCallback = 'blackhole';
+    }
+    public function beforeRender(\Cake\Event\EventInterface $event){
+        parent::beforeRender($event);
+        $this->viewBuilder()->addHelper('Gcal');
+        $this->viewBuilder()->addHelper('Ical');
+        $serialized=['json','xml','rss'];
+        if (null!==$this->request->getAttribute('params')['_ext']){
+            if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)) $this->viewBuilder()->setLayout('ajax');
+            //assumes you have ext/view.php (i.e. ics/view.php)
+            else $this->viewBuilder()->setLayout($this->request->getAttribute('params')['_ext'].'/default');
+        }
+
     }
     /**
      * Index method
@@ -58,6 +78,14 @@ class ConferencesController extends AppController
         }
         //debug($conferences);
         $this->set(compact('conferences','tags','view_title','tag_dropdown','tagstring','stags'));
+        
+        if(null!==$this->request->getAttribute('params')['_ext']) {
+            $file_ex=$this->request->getAttribute('params')['_ext'];
+            if ($file_ex=='rss') $this -> render('rss/index');
+            $this->set(compact('conferences'));
+            $this->viewBuilder()->setOption('serialize', ['conferences']);
+            //$this -> render('ajax');
+        }
     }
 
     //$tagname= String, returns two letter 'at' from something like at.algebraic-topology
@@ -78,10 +106,21 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
+    public function view($id = null){
         $conference = $this->Conferences->get($id, contain: ['Tags']);
+
         $this->set(compact('conference'));
+
+        //there must be a better way to figure out this is an ics..
+        if (null!==$this->request->getAttribute('params')['_ext']){
+            $file_ex=$this->request->getAttribute('params')['_ext'];
+            if ($file_ex=='ics') $this -> render('ics/view');
+            else{
+                $this->set('_serialize', ['conferences']);
+                $this->set(compact('conferences'));
+            }
+        }
+        
     }
 
     /**

@@ -55,15 +55,20 @@ return function (RouteBuilder $routes): void {
          * its action called 'display', and we pass a param to select the view file
          * to use (in this case, templates/Pages/home.php)...
          */
+        $builder->setExtensions(['rss','ics','json','xml']);
+        //$builder->setExtensions(['rss','ics']);
         $builder->connect('/', ['controller' => 'Conferences', 'action' => 'index']);
         $builder->connect('/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
-        $builder->connect('/conferences/view/*', ['controller' => 'Conferences', 'action' => 'view'],['persist'=>'id']);
+        //$builder->connect('/conferences/view/*', ['controller' => 'Conferences', 'action' => 'view'],['persist'=>'id']);
+        $builder->connect('/conferences/view/{id}', ['controller' => 'Conferences', 'action' => 'view'])->setPass(['id']);
         $builder->connect('/conferences/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
 
         /*
          * ...and connect the rest of 'Pages' controller's URLs.
          */
         $builder->connect('/pages/*', 'Pages::display');
+
+        
 
         /*
          * Connect catchall routes for all controllers.
@@ -97,3 +102,4 @@ return function (RouteBuilder $routes): void {
      * ```
      */
 };
+
