@@ -5,6 +5,7 @@ namespace App\Controller;
 use Cake\Controller\Controller\ModelAwareTrait;
 use Cake\View\JsonView;
 use Cake\View\XmlView;
+use Cake\View\View;
 
 /**
  * Conferences Controller
@@ -13,18 +14,21 @@ use Cake\View\XmlView;
  */
 class ConferencesController extends AppController
 {
-    /*
+    /* placed here and the default view no longer works
     this enables .json and .xml but disables the regular view ??
     public function viewClasses(): array{
         return [JsonView::class, XmlView::class];
     }
 */
+
     public function beforeFilter(\Cake\Event\EventInterface $event) {
         parent::beforeFilter($event); //you're supposed to always have this, don't ask me why
        // $tags=$this->fetchModel('Tags');
        // $tags->recursive=0;
         $this->set('tagstring','');
         $this->set('tagids',array());
+        $this->set('base_title','Mathmeetings.net');
+        $this->set('addon_title','');
         //$this->Security->csrfCheck = false;
         //$this->Security->blackHoleCallback = 'blackhole';
     }
@@ -34,9 +38,13 @@ class ConferencesController extends AppController
         $this->viewBuilder()->addHelper('Ical');
         $serialized=['json','xml','rss'];
         if (null!==$this->request->getAttribute('params')['_ext']){
-            if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)) $this->viewBuilder()->setLayout('ajax');
+            if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)){
+                $this->addViewClasses([JsonView::class, XmlView::class]);
+                $this->viewBuilder()->setLayout('ajax');
+             }
             //assumes you have ext/view.php (i.e. ics/view.php)
             else $this->viewBuilder()->setLayout($this->request->getAttribute('params')['_ext'].'/default');
+            
         }
 
     }
@@ -45,10 +53,9 @@ class ConferencesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index($tagstring=null)
-    {
+    public function index($tagstring=null){
         $view_title='Upcoming Meetings';
-        $query = $this->Conferences->find()->contain(['Tags'])->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))]);
+        $query = $this->Conferences->find()->contain(['Tags'])->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))])->select($this->publicFields());
         $stags=[];
         if ($tagstring!==null){
             //pass this to select box to select values
@@ -88,6 +95,26 @@ class ConferencesController extends AppController
         }
     }
 
+    //returns array of fields to select, omitting sensitive data
+    function publicFields(){
+        return [
+            'title',
+            'start_date',
+            'end_date',
+            'institution',
+            'city',
+            'country',
+            'meeting_type',
+            'subject_area',
+            'homepage',
+            'contact_name',
+            'description',
+            'created',
+            'modified',
+            'id',
+        ];
+    }
+
     //$tagname= String, returns two letter 'at' from something like at.algebraic-topology
     function tag_shortname($tagname){
         $return=false;
@@ -107,17 +134,18 @@ class ConferencesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null){
-        $conference = $this->Conferences->get($id, contain: ['Tags']);
-
-        $this->set(compact('conference'));
+        $conference = $this->Conferences->get($id, contain: ['Tags'], fields: $this->publicFields());
+        $addon_title=\strip_tags($conference->title);
+        $this->set(compact('conference','addon_title'));
 
         //there must be a better way to figure out this is an ics..
         if (null!==$this->request->getAttribute('params')['_ext']){
             $file_ex=$this->request->getAttribute('params')['_ext'];
             if ($file_ex=='ics') $this -> render('ics/view');
             else{
-                $this->set('_serialize', ['conferences']);
-                $this->set(compact('conferences'));
+                
+                $this->set(compact('conference'));
+                $this->viewBuilder()->setOption('serialize', ['conference']);
             }
         }
         

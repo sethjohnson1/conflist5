@@ -1,11 +1,12 @@
 <?php 
 use Cake\Core\Configure;
+$titletag=!empty($addon_title)?"{$base_title} - {$addon_title}":$base_title;
 ?><!DOCTYPE html>
 <html>
 <head>
 <?php echo $this->Html->charset(); ?>
 <title>
-  <?php echo Configure::read('site.name');?>
+  <?=$titletag?>
 </title>
 <?php
 echo $this->Html->meta(

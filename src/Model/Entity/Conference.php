@@ -39,7 +39,7 @@ class Conference extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'edit_key' => true,
+        'edit_key' => false,
         'title' => true,
         'start_date' => true,
         'end_date' => true,
