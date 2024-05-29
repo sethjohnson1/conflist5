@@ -57,6 +57,7 @@ return function (RouteBuilder $routes): void {
          */
         $builder->connect('/', ['controller' => 'Conferences', 'action' => 'index']);
         $builder->connect('/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
+        $builder->connect('/conferences/view/*', ['controller' => 'Conferences', 'action' => 'view'],['persist'=>'id']);
         $builder->connect('/conferences/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
 
         /*
