@@ -29,7 +29,7 @@ class ConferencesController extends AppController
     {
         $view_title='Upcoming Meetings';
         $query = $this->Conferences->find()->contain(['Tags'])->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))]);
-
+        $stags=[];
         if ($tagstring!==null){
             //pass this to select box to select values
             $stags=explode('-',$tagstring);

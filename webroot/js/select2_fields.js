@@ -13,18 +13,12 @@ $(document).ready(function() {
      return results;
  };
 
- var tagSelector=$('#tag');
-
-tagSelector.select2({
+ $("#tag").select2({
 	placeholder: "Select subject tags",
 	allowClear: true,
         width: "100%",
         sortResults: $sortByMatchIndex
  }); 
-
- $('#mySelect2').on('select2:select', function (e) {
-  // Do something
-});
 
  //old below
  /*
