@@ -40,11 +40,11 @@ class ConferencesController extends AppController
             //perhaps this is better done as a custom finder
             global $conf_tag_where;
             $conf_tag_where=$where;
-            
-            $query=$this->Conferences->find()->matching('Tags',function (\Cake\ORM\Query $q){
+            //add the Tag match to the existing $query
+            $query->matching('Tags',function (\Cake\ORM\Query $q){
                 global $conf_tag_where;
                 return $q->where(['OR'=>$conf_tag_where]);
-            })->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))])->distinct(['Conferences.id'])->contain(['Tags']);
+            })->distinct(['Conferences.id']);
         }
 
         $conferences = $this->paginate($query);
