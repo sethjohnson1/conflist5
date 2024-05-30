@@ -7,7 +7,7 @@ $(function() { var
     changeMonth: true,
     numberOfMonths: 1, 
     onSelect: function( selectedDate ) { 
-	      var option = this.id == "ConferenceStartDate" ? "minDate" : "maxDate",
+	      var option = this.id == "start-date" ? "minDate" : "maxDate",
 	      instance = $( this ).data( "datepicker" ), 
 	      date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings ); 
 	      dates.not( this ).datepicker("option", option, date ); 

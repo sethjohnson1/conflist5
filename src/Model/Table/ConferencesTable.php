@@ -74,11 +74,11 @@ class ConferencesTable extends Table
 
         $validator
             ->date('start_date')
-            ->allowEmptyDate('start_date');
+            ->notEmptyDate('start_date','Please supply a valid date.');
 
         $validator
             ->date('end_date')
-            ->allowEmptyDate('end_date');
+            ->notEmptyDate('end_date','Please supply a valid date.');
 
         $validator
             ->scalar('institution')
@@ -88,12 +88,12 @@ class ConferencesTable extends Table
         $validator
             ->scalar('city')
             ->maxLength('city', 100)
-            ->allowEmptyString('city');
+            ->notEmptyString('city','Please add this location information.');
 
         $validator
             ->scalar('country')
             ->maxLength('country', 100)
-            ->allowEmptyString('country');
+            ->notEmptyString('country');
 
         $validator
             ->scalar('meeting_type')
@@ -108,7 +108,7 @@ class ConferencesTable extends Table
         $validator
             ->scalar('homepage')
             ->maxLength('homepage', 400)
-            ->allowEmptyString('homepage');
+            ->notEmptyString('homepage');
 
         $validator
             ->scalar('contact_name')
@@ -118,12 +118,28 @@ class ConferencesTable extends Table
         $validator
             ->scalar('contact_email')
             ->maxLength('contact_email', 100)
-            ->allowEmptyString('contact_email');
+            ->notEmptyString('contact_email');
 
         $validator
             ->scalar('description')
             ->allowEmptyString('description');
 
+        $validator
+            ->scalar('tag')
+            ->notEmptyArray('Tag','Please select at least one tag.')
+            ->add('Tag','needSome',['rule'=>['numElements','tags','>',0],'message'=>'Please select at least one tag.']);
+
         return $validator;
+    }
+
+    public function beforeSave(\Cake\Event\EventInterface $event, \Cake\Datasource\EntityInterface $entity, \ArrayObject $options){
+        if (!$entity->edit_key){
+            $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";  
+            $rando=substr( str_shuffle( $chars ), 0, 8);
+            $entity->set('edit_key',$rando);
+        }
+        //no special handling for dates debug($entity) and you can see they are already Cake date objects
+        return;
+   
     }
 }

@@ -24,7 +24,7 @@ echo $this->Form->control('country', ['type'=>'select', 'options'=>$countries, '
 echo $this->Form->control('homepage', ['label'=>'Conference website']);
 echo $this->Form->control('institution', ['label'=>'Host institution', 'after'=>'University, institute, etc.']);
 echo $this->Form->control('meeting_type', ['after'=>'e.g. conference, summer school, special session, etc.']);
-echo $this->Form->control('Tag', ['label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids,'empty'=>false]);
+echo $this->Form->control('Tag', ['label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids,'empty'=>false,'required']);
 echo $this->Form->control('contact_name', ['label'=>'Contact Name(s), comma separated']);
 echo $this->Form->control('contact_email', ['label'=>'Contact Email(s), comma separated', 'after'=>'never displayed publicly; confirmation and edit/delete codes will be sent to these addresses']);
 echo $this->Form->control('description', ['label'=>['text'=>'Description: <br/><span style="font-size:80%;">Enter text, HTML, or <a href="http://daringfireball.net/projects/markdown/">Markdown</a>.</span>','escape'=>false], 'rows' => '10']);

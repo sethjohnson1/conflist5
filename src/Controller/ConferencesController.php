@@ -6,6 +6,7 @@ use Cake\Controller\Controller\ModelAwareTrait;
 use Cake\View\JsonView;
 use Cake\View\XmlView;
 use Cake\View\View;
+use Cake\Http\Exception\NotFoundException;
 
 /**
  * Conferences Controller
@@ -63,14 +64,9 @@ class ConferencesController extends AppController
             $where=[];
             //make a "where" array
             foreach ($stags as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];
-            //can't figure out how to pass a param to that \Cake\ORM fx.. use a global!
-            //perhaps this is better done as a custom finder
-            global $conf_tag_where;
-            $conf_tag_where=$where;
             //add the Tag match to the existing $query
-            $query->matching('Tags',function (\Cake\ORM\Query $q){
-                global $conf_tag_where;
-                return $q->where(['OR'=>$conf_tag_where]);
+            $query->matching('Tags',function (\Cake\ORM\Query $q) use($where){
+                return $q->where(['OR'=>$where]);
             })->distinct(['Conferences.id']);
         }
 
@@ -160,6 +156,7 @@ class ConferencesController extends AppController
         $conference = $this->Conferences->newEmptyEntity();
         $countries=$this->loadCountries();
         if ($this->request->is('post')) {
+            //debug($this->request->getData());
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
             if ($this->Conferences->save($conference)) {
                 $this->Flash->success(__('The conference has been saved.'));
@@ -179,9 +176,10 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit($id = null,$key=null)
     {
         $conference = $this->Conferences->get($id, contain: ['Tags']);
+        if ($key!=$conference->edit_key) throw new NotFoundException(__('Invalid conference'));
         if ($this->request->is(['patch', 'post', 'put'])) {
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
             if ($this->Conferences->save($conference)) {
