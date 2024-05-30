@@ -1,6 +1,7 @@
 
 $(function() { var
-  dates = $( "#ConferenceStartDate, #ConferenceEndDate" ).datepicker({
+  //dates = $( "#ConferenceStartDate, #ConferenceEndDate" ).datepicker({
+  dates = $( "#start-date, #end-date" ).datepicker({
     dateFormat: "yy-mm-dd", 
     defaultDate: "+1w", 
     changeMonth: true,

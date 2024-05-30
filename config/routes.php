@@ -58,11 +58,12 @@ return function (RouteBuilder $routes): void {
         $builder->setExtensions(['rss','ics','json','xml']);
         //$builder->setExtensions(['rss','ics']);
         $builder->connect('/', ['controller' => 'Conferences', 'action' => 'index']);
-        $builder->connect('/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
+        
         //$builder->connect('/conferences/view/*', ['controller' => 'Conferences', 'action' => 'view'],['persist'=>'id']);
         $builder->connect('/conferences/view/{id}', ['controller' => 'Conferences', 'action' => 'view'])->setPass(['id']);
-        $builder->connect('/conferences/*', ['controller' => 'Conferences', 'action' => 'index'],['persist'=>'tagstring']);
-
+        $builder->connect('/conferences/add', ['controller' => 'Conferences', 'action' => 'add'])->setPass(['id']);
+        $builder->connect('/conferences/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
+        $builder->connect('/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
         /*
          * ...and connect the rest of 'Pages' controller's URLs.
          */

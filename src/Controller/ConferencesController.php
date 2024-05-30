@@ -156,9 +156,9 @@ class ConferencesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
+    public function add(){
         $conference = $this->Conferences->newEmptyEntity();
+        $countries=$this->loadCountries();
         if ($this->request->is('post')) {
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
             if ($this->Conferences->save($conference)) {
@@ -169,7 +169,7 @@ class ConferencesController extends AppController
             $this->Flash->error(__('The conference could not be saved. Please, try again.'));
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
-        $this->set(compact('conference', 'tags'));
+        $this->set(compact('conference', 'tags','countries'));
     }
 
     /**
@@ -192,7 +192,10 @@ class ConferencesController extends AppController
             $this->Flash->error(__('The conference could not be saved. Please, try again.'));
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
-        $this->set(compact('conference', 'tags'));
+        $countries=$this->loadCountries();
+        $this->set(compact('conference', 'tags','countries'));
+        $this->set('edit',1);
+        $this->render('add');
     }
 
     /**
@@ -202,8 +205,7 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
-    {
+    public function delete($id = null){
         $this->request->allowMethod(['post', 'delete']);
         $conference = $this->Conferences->get($id);
         if ($this->Conferences->delete($conference)) {
@@ -214,4 +216,32 @@ class ConferencesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function loadCountries($file = "../webroot/files/countries/dist/countries.json"){
+        $return=[];
+        $tmpCountries = [];
+        //not necessary, just use "empty" value on Form control
+        //$tmpCountries['country'] =  "Country...";
+        
+        if (($handle = fopen($file, "r")) !== FALSE) {
+            $countries_data=json_decode(fread($handle,filesize($file)));
+            if (null!==$countries_data){
+                foreach ($countries_data as $cobj){
+                    if (!isset($tmpCountries[$cobj->region])) $tmpCountries[$cobj->region]=[];
+
+                    if ($cobj->name->common=='United States') $tmpCountries[$cobj->region]['USA']=$cobj->name->common;
+                    elseif ($cobj->name->common=='United Kingdom') $tmpCountries[$cobj->region]['UK']=$cobj->name->common;
+
+                    else $tmpCountries[$cobj->region][$cobj->name->common]=$cobj->name->common;
+                    //debug($cobj);
+                }
+            }
+            $tmpCountries['Virtual'] =  [];
+            $tmpCountries['Virtual']["Online"] = "Online";
+            $return=$tmpCountries;
+            fclose($handle);
+        }
+        return $return;
+    }
+
 }

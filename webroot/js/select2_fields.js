@@ -19,6 +19,16 @@ $(document).ready(function() {
         width: "100%",
         sortResults: $sortByMatchIndex
  }); 
+$("#country").select2({
+    placeholder: "Country...",
+    //allowClear: true,
+    width: "100%",
+matcher: function(term, text) { 
+     return text.toUpperCase().indexOf(term.toUpperCase())>=0; 
+},
+sortResults: $sortByMatchIndex
+
+}); 
 
  //old below
  /*
