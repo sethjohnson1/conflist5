@@ -37,7 +37,7 @@ class ConferencesController extends AppController
         parent::beforeRender($event);
         $this->viewBuilder()->addHelper('Gcal');
         $this->viewBuilder()->addHelper('Ical');
-        $serialized=['json','xml','rss'];
+        $serialized=['json','xml'];
         if (null!==$this->request->getAttribute('params')['_ext']){
             if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)){
                 $this->addViewClasses([JsonView::class, XmlView::class]);
