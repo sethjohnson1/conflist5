@@ -1,3 +1,0 @@
-[submodule "webroot/files/countries"]
-	path = webroot/files/countries
-	url = https://github.com/mledoze/countries.git

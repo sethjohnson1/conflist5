@@ -7,6 +7,7 @@ use Cake\View\JsonView;
 use Cake\View\XmlView;
 use Cake\View\View;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Error\Debugger;
 
 /**
  * Conferences Controller
@@ -215,7 +216,7 @@ class ConferencesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function loadCountries($file = "../webroot/files/countries/dist/countries.json"){
+    public function loadCountries($file = "../webroot/files/countries/countries.json"){
         $return=[];
         $tmpCountries = [];
         //not necessary, just use "empty" value on Form control
@@ -227,12 +228,14 @@ class ConferencesController extends AppController
                 foreach ($countries_data as $cobj){
                     if (!isset($tmpCountries[$cobj->region])) $tmpCountries[$cobj->region]=[];
 
+/* these don't work; figure out how to use data from alternate spellings
                     if ($cobj->name->common=='United States') $tmpCountries[$cobj->region]['USA']=$cobj->name->common;
                     elseif ($cobj->name->common=='United Kingdom') $tmpCountries[$cobj->region]['UK']=$cobj->name->common;
+*/
 
-                    else $tmpCountries[$cobj->region][$cobj->name->common]=$cobj->name->common;
-                    //debug($cobj);
+                    $tmpCountries[$cobj->region][$cobj->name->common]=$cobj->name->common;
                 }
+            //Debugger::dump($tmpCountries['Americas']);
             }
             $tmpCountries['Virtual'] =  [];
             $tmpCountries['Virtual']["Online"] = "Online";
