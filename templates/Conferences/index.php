@@ -211,7 +211,7 @@ else {
     'value'=>$stags,
     'label'=>'Subject Tags',
     'name'=>'tag_select',
-    'onchange'=>"updateTagLink('".$this->Url->build(['controller'=>'Conferences','action'=>'index'])."/');",
+    'onchange'=>"updateTagLink('".$this->Url->build(['controller'=>'Conferences','action'=>'index'],['fullBase'=>true])."');",
     
   ]);
   //disables the SecurityComponent
