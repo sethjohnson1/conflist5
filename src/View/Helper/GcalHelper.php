@@ -5,7 +5,9 @@ use Cake\View\Helper;
 use Cake\View\View;
 
 class GcalHelper extends Helper{
-    public function initialize(array $config): void    {
+    public function initialize(array $config): void {
+       //$site_url = Configure::read('site.home');
+       //$site_name = Configure::read('site.name');
        // debug($config);
     }
     public function gcal_url($id, $start_date, $end_date, $title, $city, $country, $url) {
@@ -17,7 +19,7 @@ class GcalHelper extends Helper{
         "dates=".$start_string."/".$end_string.
         "&details=".$url.
         "&location=".urlencode($location).
-        "&trp=false&sprop=".urlencode($this->site_url).
+        "&trp=false&sprop=".urlencode($url).
         "&sprop=name:".urlencode($this->site_name);
       return $Gcal_url;
     }
