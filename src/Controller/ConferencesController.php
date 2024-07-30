@@ -6,8 +6,13 @@ use Cake\Controller\Controller\ModelAwareTrait;
 use Cake\View\JsonView;
 use Cake\View\XmlView;
 use Cake\View\View;
+use Cake\Core\Configure;
+use Cake\Http\Cookie\Cookie;
+use Cake\Http\Cookie\CookieCollection;
+use DateTime;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Error\Debugger;
+use Cake\Log\Log;
 
 /**
  * Conferences Controller
@@ -251,5 +256,50 @@ class ConferencesController extends AppController
         }
         return $return;
     }
+
+  public function curatorCookie() {
+    Log::write('debug','curator_cookie page accessed');
+    //read cookie if it exists
+    $cookie = $cookies->curator_cookie ?? '';
+    debug('cookie = '.$cookie);
+    // debug(Configure::read('site.admin_key'));
+    $thisData = $this->request->getData();
+    if (!empty($thisData)) {
+      Log::write('debug','curator_cookie data submitted');
+      debug('data = '.$thisData['admin_key']);
+      if ($thisData['admin_key'] == Configure::read('site.admin_key')) {
+        Log::write('debug','curator_cookie data matches!');
+        debug('match');
+        //set cookie for curator usage
+        $cookie = (new Cookie('curator_cookie'))
+            ->withValue(Configure::read('site.curator_cookie'))
+            ->withExpiry(new DateTime('+5 year'))
+            ->withPath('/')
+            ->withDomain(Configure::read('site.host'))
+            ->withSecure(true)
+            ->withHttpOnly(true);
+
+        //add it to a collection for some reason
+        $cookies = new CookieCollection([$cookie]);
+
+        //read the cookie
+        $cookie = $cookies->curator_cookie;
+        // debug('second read: '.$cookie);
+
+        // $this->Cookie->secure = true;  // i.e. only sent if using secure HTTPS
+        // $this->Cookie->httpOnly = true; // i.e. not accessible to javascript
+        // $this->Cookie->write('curator_cookie', Configure::read('site.curator_cookie'));
+        // $this->set('readCookie', $this->Cookie->read('curator_cookie'));
+
+        // $this->Flash->success(__('Curator cookie set!'));
+        // return $this->redirect(['action' => 'index']);
+      }
+    }
+    else{
+        // debug('data empty'.$thisData);
+    }
+    $this->set(compact('cookie'));
+  }
+
 
 }

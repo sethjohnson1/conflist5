@@ -1,43 +1,24 @@
 <?php
 use Cake\Core\Configure;
-?>
-<!-- social networking buttons -->
-<!-- currently disabled
-<div class="share-links">
-  <div class="g-plusone" data-href="<? echo Configure::read('site.home'); ?>"></div>
-  <div style="display: inline-block;"><a href="https://twitter.com/share" class="twitter-share-button" 
-    data-text="check out <? echo Configure::read('site.name'); ?>"
-    data-hashtags="MathConferences" 
-    data-url="<? echo Configure::read('site.home');?>">Tweet</a></div>
-</div>
--->
-
-<?php 
-  // link elements for rss feed
-  if ($tagstring) {
+// link elements for rss feed
+if ($tagstring) {
     echo '<link type="application/rss+xml" rel="alternate" href="'.$tagstring.'.rss"/>';
-  }
-  else {
+}
+else {
     echo '<link type="application/rss+xml" rel="alternate" href="'.Configure::read('site.home').'/conferences/index.rss"/>';
-  }
+}
 ?>
 
 
 <?php
-/*
-echo $this->Js->link(array(
-'https://apis.google.com/js/plusone.js', 
-'http://platform.twitter.com/widgets.js', 
-), false);
-*/
 
-// display search if requested 
-if (isset($search) && $search) { 
-echo '<h1>'.$view_title.'</h1>'; 
+// display search if requested
+if (isset($search) && $search) {
+echo '<h1>'.$view_title.'</h1>';
 
-echo '<p>Currently the search only performs simple date comparison and basic 
-string matching in the indicated fields.  If you have more sophisticated search 
-needs, please <a href="http://nilesjohnson.net/contact.html" target="blank">let 
+echo '<p>Currently the search only performs simple date comparison and basic
+string matching in the indicated fields.  If you have more sophisticated search
+needs, please <a href="http://nilesjohnson.net/contact.html" target="blank">let
 Niles know</a>.</p>';
 
 echo $this->Form->create('Search');
@@ -101,7 +82,7 @@ else {
   'Topology', array('controller'=>'Conferences','action'=>'at-gt'));?>
 </dt>
 <dd>
-  <span class="tag">at.algebraic-topology</span> 
+  <span class="tag">at.algebraic-topology</span>
   <span class="tag">gt.geometric-topology</span>
 </dd>
 <!--
@@ -149,8 +130,8 @@ else {
     <li>Now filter announcements by subject tags</li>
     <li>Form for editing announcements is now the same as that for adding new announcements</li>
     <li>New 'view' page for each announcement, and announcement data in confirmation emails</li>
-    <li>Select boxes improved with select2 (jquery)</li>    
-  </ul>	  
+    <li>Select boxes improved with select2 (jquery)</li>
+  </ul>
 
   <h4>Updates 2014-02-16</h4>
 
@@ -172,7 +153,7 @@ else {
 
 <div>
   <div style="float:right;">
-<?php 
+<?php
   if ($tagstring) {
     echo $this->Html->link('RSS',array('controller'=>'Conferences','action'=>$tagstring.'.rss'));
     echo "&nbsp;&nbsp;";
@@ -212,7 +193,7 @@ else {
     'label'=>'Subject Tags',
     'name'=>'tag_select',
     'onchange'=>"updateTagLink('".$this->Url->build(['controller'=>'Conferences','action'=>'index'],['fullBase'=>true])."');",
-    
+
   ]);
   //disables the SecurityComponent
   //$this->Form->unlockField('Tag');
@@ -234,7 +215,7 @@ document.getElementById('tagSelectDiv').style.display = 'block';
 <?php } ?>
 
 <?php $curr_subsort = Null; $new_subsort = Null; $subsort_counter = 0; echo '<div id="subsort_start">'; ?>
-<?php 
+<?php
 $site_url = Configure::read('site.home');
 $site_name = Configure::read('site.name');
 
@@ -247,8 +228,8 @@ foreach ($conferences as $conference):
      * */
     $sort_condition=null;
 if ($sort_condition == Null || $sort_condition == 'all') {
-  //$datearray = explode("-",$conference['start_date']); 
-  //$new_subsort =  $months[(int)$datearray[1]]." ".$datearray[0]; 
+  //$datearray = explode("-",$conference['start_date']);
+  //$new_subsort =  $months[(int)$datearray[1]]." ".$datearray[0];
     $new_subsort=$start_date->format('F Y');
  }
 if ($sort_condition == 'country') {
@@ -259,11 +240,11 @@ if ($new_subsort != $curr_subsort) {
   $curr_subsort = $new_subsort;
   echo '<div class="subsort' . $subsort_counter . '">';
   echo '<h2>' . $new_subsort . '</h2>';
-  $subsort_counter += 1; 
+  $subsort_counter += 1;
   $subsort_counter = $subsort_counter % 2;
  }
- 
- 
+
+
 
 
 ?>
@@ -314,29 +295,29 @@ echo
 ?>
 
 <div class="location">
-<?php 
+<?php
       echo $conference['city']."; ".$conference['country'];
 ?>
 </div>
 
 <div class="action">
 <a  id="description_<?php echo $conference['id'];?>_plus" onclick="
-   document.getElementById('description_<?php echo $conference['id'];?>').style.display='block'; 
-   document.getElementById('description_<?php echo $conference['id'];?>_plus').style.display='none'; 
-   document.getElementById('description_<?php echo $conference['id'];?>_minus').style.display='inline'; 
+   document.getElementById('description_<?php echo $conference['id'];?>').style.display='block';
+   document.getElementById('description_<?php echo $conference['id'];?>_plus').style.display='none';
+   document.getElementById('description_<?php echo $conference['id'];?>_minus').style.display='inline';
    return false;" href="#">Description</a>
 <a  id="description_<?php echo $conference['id'];?>_minus" onclick="
-   document.getElementById('description_<?php echo $conference['id'];?>').style.display='none'; 
-   document.getElementById('description_<?php echo $conference['id'];?>_plus').style.display='inline'; 
-   document.getElementById('description_<?php echo $conference['id'];?>_minus').style.display='none'; 
+   document.getElementById('description_<?php echo $conference['id'];?>').style.display='none';
+   document.getElementById('description_<?php echo $conference['id'];?>_plus').style.display='inline';
+   document.getElementById('description_<?php echo $conference['id'];?>_minus').style.display='none';
    return false;" href="#" style="display:none;"> - Description</a>
- | 
-<?php echo 
-  $this->Html->link('View entry', 
+ |
+<?php echo
+  $this->Html->link('View entry',
   array('action'=>'view', $conference['id']));?>
 
-<?php /* //print edit links  
-  echo ' | '.$this->Html->link('Edit', 
+<?php /* //print edit links
+  echo ' | '.$this->Html->link('Edit',
   array('action'=>'edit', $conference['id'], $conference['edit_key'])); /**/?>
 
 
@@ -344,12 +325,12 @@ echo
 
 <div class="conference_minor" id="description_<?php echo $conference['id']?>">
 <p>Meeting Type: <?php echo $conference['meeting_type']?></p>
-<p>Contact: <?php echo 
+<p>Contact: <?php echo
 !$conference['contact_name'] ? 'see conference website' : $conference['contact_name']?></p>
 
 
 <h3>Description</h3>
-<div class="description"><?php echo 
+<div class="description"><?php echo
 !$conference['description'] ? 'none' : $conference['description']
 ?></div>
 </div>
@@ -363,12 +344,3 @@ echo
 <?php endforeach; ?>
 
 </div>
-
-
-
-
-
-
-
-
-

@@ -1,15 +1,5 @@
-
-<div class="share-links">
-  <div class="g-plusone" data-href="<? echo $conference['homepage']; ?>"></div>
-  <div style="display: inline-block;"><a href="https://twitter.com/share" class="twitter-share-button" 
-    data-text="<? echo $conference['title']; ?>"
-    data-hashtags="ConferenceAnnouncement" 
-    data-url="<? echo $conference['homepage'];?>">Tweet</a></div>
-</div>
-
-
 <h2 class="title">
-<?php 
+<?php
 echo $this->Html->link($conference['title'], $conference['homepage']);
 ;?>
 </h2>
@@ -23,7 +13,7 @@ echo $this->Html->link($conference['title'], $conference['homepage']);
 </div>
 
 <div class="calendars" style="margin: 1ex;">
-<?php  
+<?php
 echo
   $this->Html->link('Google calendar',
   $this->Gcal->gcal($conference),
@@ -35,7 +25,7 @@ echo
 </div>
 
 <dl>
-                
+
   <dt><?= __('Start Date') ?></dt>
   <dd><?= h($conference->start_date) ?></dd>
 
@@ -71,17 +61,16 @@ echo
 
 <h2>Description</h2>
 <div class="conference_minor" style="display:block">
-<?php echo 
+<?php echo
 !$conference['description'] ? 'none' : $conference['description']
 ?>
 </div>
 
 <h2>Problems?</h2>
 <p>
-If you notice a problem with this entry, please contact 
+If you notice a problem with this entry, please contact
 <?php
 echo "<a href=\"" . $this->Url->build('/') . "conferences/about#curators\">the curators</a> ";
 ?>
 by email.
 </p>
-
