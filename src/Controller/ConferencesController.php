@@ -46,7 +46,7 @@ class ConferencesController extends AppController
              }
             //assumes you have ext/view.php (i.e. ics/view.php)
             else $this->viewBuilder()->setLayout($this->request->getAttribute('params')['_ext'].'/default');
-            
+
         }
 
     }
@@ -82,7 +82,7 @@ class ConferencesController extends AppController
         }
         //debug($conferences);
         $this->set(compact('conferences','tags','view_title','tag_dropdown','tagstring','stags'));
-        
+
         if(null!==$this->request->getAttribute('params')['_ext']) {
             $file_ex=$this->request->getAttribute('params')['_ext'];
             if ($file_ex=='rss') $this -> render('rss/index');
@@ -140,12 +140,12 @@ class ConferencesController extends AppController
             $file_ex=$this->request->getAttribute('params')['_ext'];
             if ($file_ex=='ics') $this -> render('ics/view');
             else{
-                
+
                 $this->set(compact('conference'));
                 $this->viewBuilder()->setOption('serialize', ['conference']);
             }
         }
-        
+
     }
 
     /**
@@ -222,7 +222,7 @@ class ConferencesController extends AppController
         $tmpCountries = [];
         //not necessary, just use "empty" value on Form control
         //$tmpCountries['country'] =  "Country...";
-        
+
         if (($handle = fopen($file, "r")) !== FALSE) {
             $countries_data=json_decode(fread($handle,filesize($file)));
             if (null!==$countries_data){
@@ -238,13 +238,14 @@ class ConferencesController extends AppController
                     //$tmpCountries[$cobj->region][$cobj->name->common]=$cobj->name->common;
 
                     //add alt spellings to value, then use select2 to format results using id (key) instead of val
-                    $tmpCountries[$cobj->region][$cobj->name->common]=implode(' ',$cobj->altSpellings).' '.$cobj->name->common;
+                    $tmpCountries[$cobj->region][$cobj->name->common]=$cobj->name->common.' ('.implode(', ',$cobj->altSpellings).')';
 
                 }
-            //Debugger::dump($tmpCountries['Americas']);
             }
             $tmpCountries['Virtual'] =  [];
             $tmpCountries['Virtual']["Online"] = "Online";
+            //Debugger::dump($tmpCountries['Americas']);
+            //debug($tmpCountries);
             $return=$tmpCountries;
             fclose($handle);
         }

@@ -1,3 +1,16 @@
+CHANGELOG
+---------
+
+### v. 3.0?? (MONTH YEAR) ###
+
+Rewritten for the latest versions of PHP and CakePHP.
+Functionally is generally the same, with a few improvements.
+
+- When adding an announcement, the Country selector now accepts any alternate spellings such as USA, UK, Deutschland, etc.  The full list is from the [countries data repository](https://github.com/mledoze/countries).
+
+
+-------------
+
 # CakePHP Application Skeleton
 
 ![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=master)
