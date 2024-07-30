@@ -23,12 +23,25 @@ $("#country").select2({
     placeholder: "Country...",
     //allowClear: true,
     width: "100%",
+    /* sj - I don't think we need a custom matcher with the current approach, but it might need to be tweaked?
 matcher: function(term, text) { 
      return text.toUpperCase().indexOf(term.toUpperCase())>=0; 
-},
-sortResults: $sortByMatchIndex
+},*/
+    templateResult: formatCountry,
+    templateSelection: formatCountry,
+	sortResults: $sortByMatchIndex
+});
 
-}); 
+function formatCountry(country){
+	//must be return as jQuery obj
+	var text=country.id; //use the ID rather than name, which has alt spelling search vals
+	//if it has children, then its an optgroup (Americas, Asia, etc)
+	if (typeof(country.children)!='undefined') text=country.text;
+	//otherwise stick with the ID 
+	var ctyObj=$("<span style='color:black;'>"+text+"</span>");
+	return ctyObj;
+}
+
 
  //old below
  /*

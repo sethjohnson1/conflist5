@@ -29,12 +29,16 @@ echo $this->Html->script('datepicker') ."\n";  //configuration for conflist app
 echo $this->Html->script('misc') ."\n";  //configuration for conflist app
 
 
-// select2
+// select2 - OLD
 //echo $this->Html->css('select2') ."\n";
-echo $this->Html->css('https://cdn.jsdelivr.net/select2/3.4.8/select2.css') ."\n";
-//echo $this->Html->script('select2');
-//echo $this->Html->script('https://cdn.jsdelivr.net/select2/3.4.8/select2.js') ."\n"; 
-echo $this->Html->script('https://cdn.jsdelivr.net/select2/3.4.8/select2.min.js') ."\n"; 
+//echo $this->Html->css('https://cdn.jsdelivr.net/select2/3.4.8/select2.css') ."\n";
+//echo $this->Html->script('https://cdn.jsdelivr.net/select2/3.4.8/select2.min.js') ."\n";
+
+//select2 latest 2024-07-29
+echo $this->Html->css('https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css') ."\n";
+echo $this->Html->script('https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js') ."\n";
+
+
 echo $this->Html->script('select2_fields') ."\n";  //configuration for conflist app
 
 echo $this->fetch('meta');

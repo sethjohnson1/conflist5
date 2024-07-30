@@ -156,6 +156,7 @@ class ConferencesController extends AppController
     public function add(){
         $conference = $this->Conferences->newEmptyEntity();
         $countries=$this->loadCountries();
+        //debug($countries);
         if ($this->request->is('post')) {
             //debug($this->request->getData());
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
@@ -233,7 +234,12 @@ class ConferencesController extends AppController
                     elseif ($cobj->name->common=='United Kingdom') $tmpCountries[$cobj->region]['UK']=$cobj->name->common;
 */
 
-                    $tmpCountries[$cobj->region][$cobj->name->common]=$cobj->name->common;
+                    //simple original way
+                    //$tmpCountries[$cobj->region][$cobj->name->common]=$cobj->name->common;
+
+                    //add alt spellings to value, then use select2 to format results using id (key) instead of val
+                    $tmpCountries[$cobj->region][$cobj->name->common]=implode(' ',$cobj->altSpellings).' '.$cobj->name->common;
+
                 }
             //Debugger::dump($tmpCountries['Americas']);
             }
