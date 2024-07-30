@@ -16,9 +16,6 @@ echo $this->Html->meta(
 
 echo $this->Html->css('conf-list') ."\n";
 
-// social buttons
-echo $this->Html->script('social');
-
 // jquery core
 echo $this->Html->script('//code.jquery.com/jquery-1.10.2.min.js') ."\n";
 
