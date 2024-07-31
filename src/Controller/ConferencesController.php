@@ -257,52 +257,36 @@ class ConferencesController extends AppController
         return $return;
     }
 
-  public function curatorCookie() {
-    Log::write('debug','curator_cookie page accessed');
-    //read cookie if it exists
-    $cookie = $this->request->getCookie('curator_cookie');
-    if ($cookie == Configure::read('site.curator_cookie')) {
-        $cookieInfoHeader = 'Admin cookie is set!';
-    }
-    else {
-        $cookieInfoHeader = 'Enter admin key to set cookie.';
-    }
-    $this->set(compact('cookieInfoHeader'));
-    debug('cookie = '.$cookie);
-    // debug(Configure::read('site.admin_key'));
-    $thisData = $this->request->getData();
-    if (!empty($thisData)) {
-        Log::write('debug','curator_cookie data submitted');
-        debug('data = '.$thisData['admin_key']);
-        if ($thisData['admin_key'] == Configure::read('site.admin_key')) {
-            Log::write('debug','curator_cookie data matches!');
-            debug('match');
-            //set cookie for curator usage
-            $this->response = $this->response->withCookie(Cookie::create(
-                'curator_cookie',
-                Configure::read('site.curator_cookie'),
-                [
-                    'expires' => new DateTime('+1 year'),
-                    'path' => '',
-                    'domain' => Configure::read('site.host'),
-                    'secure' => true,
-                    'httponly' => true,
-                ]
-            ));
-
-            // $this->Cookie->secure = true;  // i.e. only sent if using secure HTTPS
-            // $this->Cookie->httpOnly = true; // i.e. not accessible to javascript
-            // $this->Cookie->write('curator_cookie', Configure::read('site.curator_cookie'));
-            // $this->set('readCookie', $this->Cookie->read('curator_cookie'));
-
-            //$this->Flash->success(__('Curator cookie set!'));
-            //return $this->redirect(['action' => 'index']);
+    public function curatorCookie() {
+        $cookie = $this->request->getCookie('curator_cookie');
+        if ($cookie == Configure::read('site.curator_cookie')) {
+            $cookieInfoHeader = 'Admin cookie is set!';
         }
+        else {
+            $cookieInfoHeader = 'Enter admin key to set cookie.';
+        }
+        $thisData = $this->request->getData();
+        if (!empty($thisData)) {
+            if ($thisData['admin_key'] == Configure::read('site.admin_key')) {
+                $this->response = $this->response->withCookie(Cookie::create(
+                    'curator_cookie',
+                    Configure::read('site.curator_cookie'),
+                    [
+                        'expires' => new DateTime('+1 year'),
+                        'path' => '',
+                        'secure' => true,
+                        'httponly' => true,
+                    ]
+                ));
+
+                $cookieInfoHeader = 'Admin cookie is set!';
+                // $this->Flash->success(__('Curator cookie set!'));
+                // return $this->redirect(['action' => 'index']);
+            }
+        }
+        $this->set(compact('cookieInfoHeader'));
     }
-    else{
-        // debug('data empty'.$thisData);
-    }
-  }
+
 
 
 }
