@@ -13,7 +13,7 @@ $(document).ready(function() {
      return results;
  };
 
- $("#tag").select2({
+ $("#tags-ids, #tag").select2({
 	placeholder: "Select subject tags",
 	allowClear: true,
         width: "100%",
@@ -37,7 +37,9 @@ function formatCountry(country){
 	var text=country.id; //use the ID rather than name, which has alt spelling search vals
 	//if it has children, then its an optgroup (Americas, Asia, etc)
 	if (typeof(country.children)!='undefined') text=country.text;
-	//otherwise stick with the ID 
+	//otherwise stick with the ID
+	return text; 
+	/* left here as example, if you add HTML need to return as jQ obj*/
 	var ctyObj=$("<span style='color:black;'>"+text+"</span>");
 	return ctyObj;
 }

@@ -824,12 +824,17 @@ div.datefield {
     font-family: monospace;
 }
 
-/*sj - added to hide Chrome datepicker */
+/* prevent white/white text/background */
+.select2-results__option{
+	color:black;
+}
 
+/*sj - added to hide Chrome datepicker */
+/*
 input::-webkit-calendar-picker-indicator{
     display: none;
 }
 
 input[type="date"]::-webkit-input-placeholder{ 
     visibility: hidden !important;
-}
+}*/

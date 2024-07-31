@@ -11,6 +11,7 @@ use Cake\Http\Cookie\Cookie;
 use Cake\Http\Cookie\CookieCollection;
 use DateTime;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Exception\NotImplementedException;
 use Cake\Error\Debugger;
 use Cake\Log\Log;
 
@@ -161,16 +162,30 @@ class ConferencesController extends AppController
     public function add(){
         $conference = $this->Conferences->newEmptyEntity();
         $countries=$this->loadCountries();
+        $error='Unspecified error has occurred';
         //debug($countries);
         if ($this->request->is('post')) {
             //debug($this->request->getData());
-            $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-            if ($this->Conferences->save($conference)) {
-                $this->Flash->success(__('The conference has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+            //check dates
+            try{
+                $sd=new DateTime($this->request->getData()['start_date']);
+                $ed=new DateTime($this->request->getData()['end_date']);
+                if ($sd>$ed) $error='Start date cannot be after end date.';
+                else $error=false;
             }
-            $this->Flash->error(__('The conference could not be saved. Please, try again.'));
+            catch (Exception $e){
+                $error='Dates could not be parsed. Please contact us if you continue to receive this error.';
+            }
+            if (!$error){
+                $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
+                if ($this->Conferences->save($conference)) {
+                    $this->Flash->success(__('The conference has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+                }
+                else $error='The conference could not be saved. Please, try again.';
+            }
+
+            $this->Flash->error(__($error));
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
         $this->set(compact('conference', 'tags','countries'));
@@ -286,7 +301,6 @@ class ConferencesController extends AppController
         }
         $this->set(compact('cookieInfoHeader'));
     }
-
 
 
 }
