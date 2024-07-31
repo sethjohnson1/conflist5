@@ -658,6 +658,8 @@ div.subsort0 h2, div.subsort1 h2 {
 h3.title {
     margin-bottom: 1ex;
 }
+h3.new {
+}
 div.calendars {
     display: inline-block;
     float: right;

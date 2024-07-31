@@ -8,6 +8,7 @@ Functionally is generally the same, with a few improvements.
 
 - When adding an announcement, the Country selector now accepts any alternate spellings such as USA, UK, Deutschland, etc.  The full list is from the [countries data repository](https://github.com/mledoze/countries).
 
+- Announcements that have been added or updated in the last 30 days are marked with [New].
 
 -------------
 

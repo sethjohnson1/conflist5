@@ -220,9 +220,8 @@ $site_url = Configure::read('site.home');
 $site_name = Configure::read('site.name');
 
 foreach ($conferences as $conference):
-    $start_date=new DateTime($conference['start_date']);
-   // debug($start_date);
-    //debug($conference);
+    $start_date=$conference['start_date'];
+    // debug($start_date);
     /**
      * hacks for now
      * */
@@ -245,15 +244,22 @@ if ($new_subsort != $curr_subsort) {
  }
 
 
-
+if ($conference['modified']->wasWithinLast('30 days')) {
+$titleClass = "title recent";
+$modInfo = '<span class="modinfo" style="padding-left: 1em; padding-right: 1em; font-size: 80%; font-style: italic; color:green;">[New]</span>';
+}
+else {
+$titleClass = "title";
+$modInfo = '';
+}
+echo '<h3 class="'.$titleClass.'">';
 
 ?>
 
-<h3 class="title">
 <?php echo '<a href="'.
    $conference['homepage'].
    '">'.
-   $conference['title'].
+   $modInfo.$conference['title'].
    '</a>'
    ;?>
 </h3>
