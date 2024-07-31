@@ -14,7 +14,6 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Error\Debugger;
 use Cake\Log\Log;
-use Cake\Http\Middleware\EncryptedCookieMiddleware;
 
 /**
  * Conferences Controller
@@ -307,7 +306,7 @@ class ConferencesController extends AppController
             // $this->set('readCookie', $this->Cookie->read('curator_cookie'));
 
             //$this->Flash->success(__('Curator cookie set!'));
-            
+
             //return $this->redirect(['action' => 'index']);
         }
     }
