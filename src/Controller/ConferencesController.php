@@ -8,7 +8,6 @@ use Cake\View\XmlView;
 use Cake\View\View;
 use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
-use Cake\Http\Cookie\CookieCollection;
 use DateTime;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\NotImplementedException;
@@ -154,6 +153,23 @@ class ConferencesController extends AppController
 
     }
 
+    public function admin($id = null){
+        // do everything for standard view
+        $this->view($id);
+        // check if cookie is set and correct
+        $cookie = $this->request->getCookie('curator_cookie');
+        if ($cookie == Configure::read('site.curator_cookie')) {
+            // send the edit link to be displayed
+            $editKey= $this->Conferences->get($id, fields: ['edit_key']);
+            $editLink = '/conferences/edit/'.$id.'/'.$editKey['edit_key'];
+            $this->set(compact('editLink'));
+        }
+        // render the standard view
+        $this->render('/Conferences/view');
+    }
+
+
+
     /**
      * Add method
      *
@@ -288,7 +304,7 @@ class ConferencesController extends AppController
                     Configure::read('site.curator_cookie'),
                     [
                         'expires' => new DateTime('+1 year'),
-                        'path' => '',
+                        'path' => '/',
                         'secure' => true,
                         'httponly' => true,
                     ]

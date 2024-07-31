@@ -559,7 +559,7 @@ div.code-coverage-results span.result-good {
 }
 
 
-/* AlgTop_conf specific */
+/* conflist5 specific */
 
 p {
     margin-bottom: 1pc;
@@ -608,7 +608,7 @@ hr.top {
 /* http://stackoverflow.com/questions/3972082/problem-with-html-anchor-in-absolute-div-300px-from-the-top */
 h2.target {
     //padding-top: 110px;
-    //margin-top: -110px; 
+    //margin-top: -110px;
 }
 
 
@@ -759,6 +759,12 @@ div.conference {
     font-size: 90%;
 }
 
+h3.edit-link {
+    font-weight: bold;
+    background: #ef4;
+    padding: 1ex;
+}
+
 /* Add form */
 
 div.datefield {
@@ -778,8 +784,8 @@ div.datefield {
 /* Cc Data Div */
 
 #ccdatadiv {
-    width: 70%; 
-    margin-left: 10%; 
+    width: 70%;
+    margin-left: 10%;
     background-color: #E3EBF7;
 }
 
@@ -835,6 +841,6 @@ input::-webkit-calendar-picker-indicator{
     display: none;
 }
 
-input[type="date"]::-webkit-input-placeholder{ 
+input[type="date"]::-webkit-input-placeholder{
     visibility: hidden !important;
 }*/

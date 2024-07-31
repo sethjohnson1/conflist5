@@ -12,6 +12,12 @@ echo $this->Html->link($conference['title'], $conference['homepage']);
 ?>
 </div>
 
+<?php
+    if (isset($editLink)) {
+        echo '<h3 class="edit-link">Edit/Delete Link: '.$this->Html->link($editLink,$editLink).'</h3>';
+    }
+?>
+
 <div class="calendars" style="margin: 1ex;">
 <?php
 echo
