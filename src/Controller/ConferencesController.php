@@ -11,8 +11,10 @@ use Cake\Http\Cookie\Cookie;
 use Cake\Http\Cookie\CookieCollection;
 use DateTime;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Exception\NotImplementedException;
 use Cake\Error\Debugger;
 use Cake\Log\Log;
+use Cake\Http\Middleware\EncryptedCookieMiddleware;
 
 /**
  * Conferences Controller
@@ -257,8 +259,16 @@ class ConferencesController extends AppController
         return $return;
     }
 
+//BEWARE DEBUGGING HERE AS IT WILL MESS UP REQUEST/RESPONSE
   public function curatorCookie() {
+   
     Log::write('debug','curator_cookie page accessed');
+    //safety catch if config is null
+    if (null===Configure::read('site.curator_cookie')){
+        Log::write('debug','curator_cookie is returning null. Check config.');
+        throw new NotImplementedException(__('Curator cookie is null in config.'));
+    }
+
     //read cookie if it exists
     $cookie = $this->request->getCookie('curator_cookie');
     if ($cookie == Configure::read('site.curator_cookie')) {
@@ -268,15 +278,16 @@ class ConferencesController extends AppController
         $cookieInfoHeader = 'Enter admin key to set cookie.';
     }
     $this->set(compact('cookieInfoHeader'));
-    debug('cookie = '.$cookie);
+   // debug('cookie = '.$cookie);
     // debug(Configure::read('site.admin_key'));
     $thisData = $this->request->getData();
-    if (!empty($thisData)) {
+    //debug($thisData);
+    if (!empty($thisData) && $this->request->is(['post'])) {
         Log::write('debug','curator_cookie data submitted');
-        debug('data = '.$thisData['admin_key']);
+       // debug('data = '.$thisData['admin_key']);
         if ($thisData['admin_key'] == Configure::read('site.admin_key')) {
             Log::write('debug','curator_cookie data matches!');
-            debug('match');
+            //debug('match');
             //set cookie for curator usage
             $this->response = $this->response->withCookie(Cookie::create(
                 'curator_cookie',
@@ -296,10 +307,12 @@ class ConferencesController extends AppController
             // $this->set('readCookie', $this->Cookie->read('curator_cookie'));
 
             //$this->Flash->success(__('Curator cookie set!'));
+            
             //return $this->redirect(['action' => 'index']);
         }
     }
     else{
+        //do you want to clear the cookie if it's set?
         // debug('data empty'.$thisData);
     }
   }
