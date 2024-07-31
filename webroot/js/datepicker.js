@@ -1,4 +1,4 @@
-
+/*
 $(function() { var
   //dates = $( "#ConferenceStartDate, #ConferenceEndDate" ).datepicker({
   dates = $( "#start-date, #end-date" ).datepicker({
@@ -13,4 +13,11 @@ $(function() { var
 	      dates.not( this ).datepicker("option", option, date ); 
 	  } 
       }); 
-    });
+    });*/
+
+//use HTML5 to set min date for end date
+$(document).ready(function(){
+  $('#start-date').on('change',function(e){
+    $('#end-date').attr({'min':$(this).val()});
+  });
+});

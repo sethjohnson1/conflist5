@@ -127,7 +127,8 @@ class ConferencesTable extends Table
         $validator
             ->scalar('tag')
             ->notEmptyArray('Tag','Please select at least one tag.')
-            ->add('Tag','needSome',['rule'=>['numElements','tags','>',0],'message'=>'Please select at least one tag.']);
+            ->hasAtleast('Tag',1,'Please select at least one tag.');
+            //->add('Tag','needSome',['rule'=>['hasAtLeast','tags',1,'Please select at least one tag.'],'message'=>'Please select at least one tag.']);
 
         return $validator;
     }
