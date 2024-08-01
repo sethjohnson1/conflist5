@@ -11,6 +11,7 @@ use Cake\Http\Cookie\Cookie;
 use DateTime;
 use Cake\I18n\Date;
 use Cake\I18n\FrozenDate;
+use Cake\Mailer\Mailer;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Error\Debugger;
@@ -170,7 +171,7 @@ class ConferencesController extends AppController
             $this->set(compact('editLink'));
         }
         // render the standard view
-        $this->render('/Conferences/view');
+        $this->render('view');
     }
 
 
@@ -199,11 +200,7 @@ class ConferencesController extends AppController
             }
             if (!$error){
                 $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-                if ($this->Conferences->save($conference)) {
-                    $this->Flash->success(__('The conference has been saved.'));
-                    return $this->redirect(['action' => 'index']);
-                }
-                else $error='The conference could not be saved. Please, try again.';
+                $this->saveAndSend($conference);
             }
 
             $this->Flash->error(__($error));
@@ -225,12 +222,7 @@ class ConferencesController extends AppController
         if ($key!=$conference->edit_key) throw new NotFoundException(__('Invalid conference'));
         if ($this->request->is(['patch', 'post', 'put'])) {
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-            if ($this->Conferences->save($conference)) {
-                $this->Flash->success(__('The conference has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The conference could not be saved. Please, try again.'));
+            $this->saveAndSend($conference);
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
         $countries=$this->loadCountries();
@@ -326,5 +318,106 @@ class ConferencesController extends AppController
         $this->set(compact('cookieInfoHeader'));
     }
 
+    public function saveAndSend($conference) {
+        /*
+         * helper function to save data and send email
+         * ends with redirect
+         */
+        // verify that all data saves
+        if ($this->Conferences->save($conference)) {
+            $this->Flash->success(__('The announcement has been saved.'));
 
-}
+            // save successful; now send email
+
+            /* comment this out for now
+
+            // load data for email
+            $id = $conference->id;
+
+            $mailer = $this->prepEmail($id); // id number no longer optional
+            try {
+                $mailer->deliver();
+                $this->Flash->success(__('Confirmation email with announcement data sent to contact addresses.'));
+            }
+            // catch exception and set error message??
+            */
+
+            return $this->redirect(['action' => 'index']);
+        }
+        // else: save has failed
+        else $this->Flash->error(__('The announcement could not be saved. Please, try again or contact the curators.'));
+    }
+
+    public function getEmailer() {
+        // function to return emailer, so we can replace it during tests
+        $mailer = new Mailer();
+        // maybe set transport stuff here??
+        // load from Configure::read('smtp.mmnet') or something?
+
+        // idea: maybe take an argument to choose live, test, nosend, etc?
+        return $mailer;
+    }
+
+    public function testEmailSend($addr,$id) {
+        // a hack to test sending of emails
+        // visit url with email address and id number
+        // should send email filled with info from that conference id
+        //
+        // (none of this works at the moment)
+        //
+        // protected from public by curator cookie
+        $cookie = $this->request->getCookie('curator_cookie');
+        if ($cookie == Configure::read('site.curator_cookie')) {
+            $conference = $this->Conferences->get($id, contain: ['Tags']);
+
+            $mailer = $this->prepEmail($id);
+            //do something here
+
+            $this->render('view');
+        }
+    }
+
+    public function prepEmail($id) {
+        // everything to prepare email for sending
+        // or for viewing during testing
+
+        // load data by id number; this function only called after successful save
+        $conference = $this->Conferences->get($id, contain: ['Tags']);
+        $this->set(compact('conference'));
+        debug($conference);
+
+        $mailer = $this->getEmailer();
+        $mailer->setEmailFormat('text');
+
+        //set view and variables
+        $mailer->viewBuilder()->setTemplate('default')->setLayout('plain');
+        $mailer->setViewVars(['conference' => $conference]); // don't know if this syntax is right
+
+        //gather and set values from $conference data
+        $mailer->setSubject($conference->title); // probably wrong syntax
+        $to_array = preg_split("/[\s,]+/",$conference->contact_email);
+        $mailer->setTo($to_array); //does setTo still take an array argument??
+
+
+        //gather values from config
+        $admin_email = Configure::read('site.admin_email');
+        // cc: addresses from config for matching tags
+        $cc_array = [];
+        foreach($conference->tags as $tag) {
+            $t = explode('.',$tag['name'])[0];
+            if (array_key_exists($t,$admin_email)) {
+                $cc_array = array_merge($cc_array,$admin_email[$t]);
+            }
+        }
+        $mailer->setCc($cc_array); //does setCc take an array argument?
+        // bcc: addresses in config 'site.admin_email'
+        $admin_email = Configure::read('site.admin_email');
+        $mailer->setBcc($admin_email['all']);
+
+        debug($mailer);
+        return $mailer;
+    }
+
+
+
+} // close class
