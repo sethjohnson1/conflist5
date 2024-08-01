@@ -9,10 +9,15 @@ use Cake\View\View;
 use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
 use DateTime;
+use Cake\I18n\Date;
+use Cake\I18n\FrozenDate;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Error\Debugger;
 use Cake\Log\Log;
+
+Date::setToStringFormat('yyyy-MM-dd');
+FrozenDate::setToStringFormat('yyyy-MM-dd');
 
 /**
  * Conferences Controller
