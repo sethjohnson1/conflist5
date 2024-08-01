@@ -31,12 +31,11 @@ echo $this->Form->control('description', ['label'=>['text'=>'Description: <br/><
 
 echo '<div class="input"><p>Description Preview:</p><div class="wmd-preview"></div></div>';
 
-if (!(isset($edit) || $validCuratorcookie)) {
-  echo '<div id="ConferenceRecaptcha" class="required">';
-  echo $this->Form->label('recaptcha','Captcha task.');
-  //echo $this->Recaptcha->display();
-  echo '</div>';
-}
+// if (!(isset($edit) || $validCuratorcookie)) {
+//   echo '<div id="ConferenceRecaptcha" class="required">';
+//   echo $this->Form->label('recaptcha','Captcha task.');
+//   echo '</div>';
+// }
 echo $this->Form->submit('Submit');
 echo $this->Form->end();
 if (isset($edit)):
