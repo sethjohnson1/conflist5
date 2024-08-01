@@ -1,4 +1,4 @@
-<?php 
+<?php
 use Cake\Core\Configure;
 $titletag=!empty($addon_title)?"{$base_title} - {$addon_title}":$base_title;
 ?><!DOCTYPE html>
@@ -63,7 +63,7 @@ if (!isset($tagstring)) {
       |
       <?php echo $this->Html->link('New Announcement',array('controller' =>
      'conferences', 'action' => 'add', $tagstring))?>
-      | 
+      |
       <?php echo $this->Html->link('About',array('controller' =>
      'conferences', 'action' => 'about'))?>
 
@@ -71,7 +71,7 @@ if (!isset($tagstring)) {
   </div>
 
   <div id="flashdiv">
-    <?php //echo $this->Session->flash(); ?>
+    <?= $this->Flash->render() ?>
   </div>
 
   <!-- view content -->
@@ -84,7 +84,7 @@ if (!isset($tagstring)) {
     <div style="text-align: left">
       <?php echo $this->Html->link(str_replace('http://www.','',Configure::read('site.host')),Configure::read('site.host'));?>
       <div id="admin_contact">
-    Trouble? Comments? 
+    Trouble? Comments?
     <?php echo $this->Html->link('Contact ' . Configure::read('site.host_name'),Configure::read('site.host_contact_url'));?>
       </div>
     </div>

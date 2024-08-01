@@ -291,7 +291,7 @@ class ConferencesController extends AppController
     public function curatorCookie() {
         $cookie = $this->request->getCookie('curator_cookie');
         if ($cookie == Configure::read('site.curator_cookie')) {
-            $cookieInfoHeader = 'Admin cookie is set!';
+            $cookieInfoHeader = 'Curator cookie is set!';
         }
         else {
             $cookieInfoHeader = 'Enter admin key to set cookie.';
@@ -310,9 +310,12 @@ class ConferencesController extends AppController
                     ]
                 ));
 
-                $cookieInfoHeader = 'Admin cookie is set!';
-                // $this->Flash->success(__('Curator cookie set!'));
+                $cookieInfoHeader = 'Curator cookie is set!';
+                $this->Flash->success(__('Curator cookie set!'));
                 // return $this->redirect(['action' => 'index']);
+            }
+            else {
+            $this->Flash->error(__('incorrect key'));
             }
         }
         $this->set(compact('cookieInfoHeader'));

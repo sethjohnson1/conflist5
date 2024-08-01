@@ -703,15 +703,16 @@ div.action {
     padding-bottom: .5ex;
 }
 
-div.flash {
+div.message {
     padding: .5ex 2em;
+    margin: 0;
 }
-div.flash_good {
+#flashdiv div.success {
     background-color: #ae9;
     color: #000;
     font-size: 90%;
 }
-div.flash_bad {
+#flashdiv div.error {
     background-color: #e32;
     color: #fff;
     font-size: 110%;
