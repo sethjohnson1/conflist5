@@ -81,11 +81,6 @@ class ConferencesTable extends Table
             ->notEmptyDate('end_date','Please supply a valid date.');
 
         $validator
-            ->scalar('institution')
-            ->maxLength('institution', 100)
-            ->allowEmptyString('institution');
-
-        $validator
             ->scalar('city')
             ->maxLength('city', 100)
             ->notEmptyString('city','Please add this location information.');
@@ -94,6 +89,17 @@ class ConferencesTable extends Table
             ->scalar('country')
             ->maxLength('country', 100)
             ->notEmptyString('country');
+
+        $url_validation_error="Please enter a valid URL";
+        $validator
+            ->notEmptyString('homepage',$url_validation_error)
+            ->maxLength('homepage', 400)
+            ->url('homepage',$url_validation_error);
+
+        $validator
+            ->scalar('institution')
+            ->maxLength('institution', 100)
+            ->allowEmptyString('institution');
 
         $validator
             ->scalar('meeting_type')
@@ -106,29 +112,22 @@ class ConferencesTable extends Table
             ->allowEmptyString('subject_area');
 
         $validator
-            ->scalar('homepage')
-            ->maxLength('homepage', 400)
-            ->notEmptyString('homepage');
-
-        $validator
             ->scalar('contact_name')
             ->maxLength('contact_name', 100)
             ->allowEmptyString('contact_name');
 
         $email_validation_error='Please provide a valid email. It will not be publicly visible.';
         $validator
-            ->email('contact_email',true,$email_validation_error)
+            ->setStopOnFailure(true)
+            ->notEmptyString('contact_email',$email_validation_error)
             ->maxLength('contact_email', 100)
-            ->notEmptyString('contact_email',$email_validation_error);
+            //2nd param verifies host exists, seems to work for oddball TLDs and ones with no website (checks MX DNS?)
+            ->email('contact_email',true,$email_validation_error);
 
         $validator
             ->scalar('description')
             ->allowEmptyString('description');
 
-        $validator
-            ->scalar('homepage')
-            ->maxLength('homepage', 400)
-            ->notEmptyString('homepage');
 
         /* I don't think this has any effect, and I have tried everything I can think of like Tag, Tags, tag, tags, tag[_ids]
         $validator
