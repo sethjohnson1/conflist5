@@ -188,6 +188,13 @@ class ConferencesController extends AppController
         //debug($countries);
         if ($this->request->is('post')) {
             //debug($this->request->getData());
+            //HONEYPOT check
+            if (isset($this->request->getData()['contact_password']) && !empty($this->request->getData()['contact_password'])){
+                //do nothing but pretend to save. Other option is to flag in DB as potential spam 
+                $this->Flash->success(__('The announcement has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            }
+
             //check dates
             try{
                 $sd=new DateTime($this->request->getData()['start_date']);
@@ -202,8 +209,7 @@ class ConferencesController extends AppController
                 $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
                 $this->saveAndSend($conference);
             }
-
-            $this->Flash->error(__($error));
+            else $this->Flash->error(__($error)); //added ELSE here, was firing maybe bc redirect is in another function?
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
         $this->set(compact('conference', 'tags','countries'));

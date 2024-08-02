@@ -125,10 +125,17 @@ class ConferencesTable extends Table
             ->allowEmptyString('description');
 
         $validator
+            ->scalar('homepage')
+            ->maxLength('homepage', 400)
+            ->notEmptyString('homepage');
+
+        /* I don't think this has any effect, and I have tried everything I can think of like Tag, Tags, tag, tags, tag[_ids]
+        $validator
             ->scalar('tag')
-            ->notEmptyArray('Tag','Please select at least one tag.')
-            ->hasAtleast('Tag',1,'Please select at least one tag.');
-            //->add('Tag','needSome',['rule'=>['hasAtLeast','tags',1,'Please select at least one tag.'],'message'=>'Please select at least one tag.']);
+            ->notEmptyArray('tag','Please select at least one tag!')
+            //->allowEmptyArray(false)
+            ->hasAtleast('tag',1,'Please select at least one tag!!');
+            //->add('Tag','needSome',['rule'=>['hasAtLeast','tags',1,'Please select at least one tag.'],'message'=>'Please select at least one tag.']);*/
 
         return $validator;
     }

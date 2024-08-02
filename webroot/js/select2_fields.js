@@ -44,6 +44,8 @@ function formatCountry(country){
 	return ctyObj;
 }
 
+//add required decoration to tags dropdown
+$("label[for='tags-ids']").parent().addClass('required');
 
  //old below
  /*
