@@ -118,7 +118,7 @@ class ConferencesTable extends Table
         $validator
             ->scalar('contact_email')
             ->maxLength('contact_email', 100)
-            ->notEmptyString('contact_email');
+            ->notEmptyString('contact_email','Please provide a valid email. It will not be publicly visible.');
 
         $validator
             ->scalar('description')

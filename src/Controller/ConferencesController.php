@@ -213,6 +213,7 @@ class ConferencesController extends AppController
             }
             if (!$error){
                 $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
+                //should "return" saveAndSend?
                 $this->saveAndSend($conference);
             }
             else $this->Flash->error(__($error)); //added ELSE here, was firing maybe bc redirect is in another function?
