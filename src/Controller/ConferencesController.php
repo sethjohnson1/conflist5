@@ -251,10 +251,11 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null){
+    public function delete($id = null,$key=null){
         $this->request->allowMethod(['post', 'delete']);
         $conference = $this->Conferences->get($id);
-        if ($this->Conferences->delete($conference)) {
+        if (($key!==null && $conference->edit_key==$key) //check edit key
+            && $this->Conferences->delete($conference)) {
             $this->Flash->success(__('The conference has been deleted.'));
         } else {
             $this->Flash->error(__('The conference could not be deleted. Please, try again.'));

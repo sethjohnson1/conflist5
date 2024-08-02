@@ -45,8 +45,8 @@ echo '</div>';
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-        <li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $conference->id,$conference->edit_key), [], __('Are you sure you want to delete "%s"?',$conference->title)); ?></li>
-		<li><?php echo $this->Html->link(__('List Conferences'), array('action' => 'index')); ?></li>
+        <li><?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $conference->id,$conference->edit_key], [], __('Are you sure you want to delete "%s"?',$conference->title)); ?></li>
+		<li><?php echo $this->Html->link(__('List Conferences'), ['action' => 'index']); ?></li>
 	</ul>
 </div>
 <?php endif ?>
