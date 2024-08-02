@@ -190,8 +190,14 @@ class ConferencesController extends AppController
             //debug($this->request->getData());
             //HONEYPOT check
             if (isset($this->request->getData()['contact_password']) && !empty($this->request->getData()['contact_password'])){
-                //do nothing but pretend to save. Other option is to flag in DB as potential spam 
-                $this->Flash->success(__('The announcement has been saved.'));
+                // adds entry in logs/debug.log, with 'info' prefix
+                Log::write('info',
+                           'Honeypot trigger: title={title}, email={email}',
+                           ['title' => $this->request->getData()['title'],
+                            'email' => $this->request->getData()['contact_email']
+                           ]);
+                //do nothing but pretend to save.
+                $this->Flash->success(__('Action completed.'));
                 return $this->redirect(['action' => 'index']);
             }
 
