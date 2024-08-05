@@ -211,10 +211,11 @@ class ConferencesController extends AppController
             catch (Exception $e){
                 $error='Dates could not be parsed. Please contact us if you continue to receive this error.';
             }
+
             if (!$error){
                 $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-                //should "return" saveAndSend?
-                $this->saveAndSend($conference);
+                //try returning saveAndSend
+                return $this->saveAndSend($conference);
             }
             else $this->Flash->error(__($error)); //added ELSE here, was firing maybe bc redirect is in another function?
         }
@@ -235,7 +236,8 @@ class ConferencesController extends AppController
         if ($key!=$conference->edit_key) throw new NotFoundException(__('Invalid conference'));
         if ($this->request->is(['patch', 'post', 'put'])) {
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-            $this->saveAndSend($conference);
+            //try returning saveAndSend
+            return $this->saveAndSend($conference);
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
         $countries=$this->loadCountries();
