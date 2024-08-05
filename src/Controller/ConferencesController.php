@@ -367,30 +367,17 @@ class ConferencesController extends AppController
     public function getEmailer() {
         // function to return emailer, so we can replace it during tests
         $mailer = new Mailer();
+        $mailer->viewBuilder()
+            ->setTemplate('confirm')
+            ->setLayout('default');
         // maybe set transport stuff here??
-        // load from Configure::read('smtp.mmnet') or something?
+        // trying to load from EmailTransport config
+        $mailer->setTransport('default')
+            ->setFrom(Configure::read('site.confirmation_from'))
+            ->setSender(Configure::read('site.confirmation_from'));
 
         // idea: maybe take an argument to choose live, test, nosend, etc?
         return $mailer;
-    }
-
-    public function testEmailSend($addr,$id) {
-        // a hack to test sending of emails
-        // visit url with email address and id number
-        // should send email filled with info from that conference id
-        //
-        // (none of this works at the moment)
-        //
-        // protected from public by curator cookie
-        $cookie = $this->request->getCookie('curator_cookie');
-        if ($cookie == Configure::read('site.curator_cookie')) {
-            $conference = $this->Conferences->get($id, contain: ['Tags']);
-
-            $mailer = $this->prepEmail($id);
-            //do something here
-
-            $this->render('view');
-        }
     }
 
     public function prepEmail($id) {
@@ -400,17 +387,17 @@ class ConferencesController extends AppController
         // load data by id number; this function only called after successful save
         $conference = $this->Conferences->get($id, contain: ['Tags']);
         $this->set(compact('conference'));
-        debug($conference);
+        // debug($conference);
 
         $mailer = $this->getEmailer();
         $mailer->setEmailFormat('text');
 
         //set view and variables
-        $mailer->viewBuilder()->setTemplate('default')->setLayout('plain');
-        $mailer->setViewVars(['conference' => $conference]); // don't know if this syntax is right
+        //$mailer->viewBuilder()->setTemplate('default')->setLayout('plain');
+        // $mailer->setViewVars(['content'=>$conference]);
 
         //gather and set values from $conference data
-        $mailer->setSubject($conference->title); // probably wrong syntax
+        $mailer->setSubject($conference->title);
         $to_array = preg_split("/[\s,]+/",$conference->contact_email);
         $mailer->setTo($to_array); //does setTo still take an array argument??
 
@@ -430,8 +417,31 @@ class ConferencesController extends AppController
         $admin_email = Configure::read('site.admin_email');
         $mailer->setBcc($admin_email['all']);
 
-        debug($mailer);
         return $mailer;
+    }
+
+    public function testEmailSend($addr,$id) {
+        // a hack to test sending of emails
+        // visit url with email address and id number
+        // should send email filled with info from that conference id
+        //
+        // (none of this works at the moment)
+        //
+        // protected from public by curator cookie
+        $cookie = $this->request->getCookie('curator_cookie');
+        if ($cookie == Configure::read('site.curator_cookie')) {
+            $conference = $this->Conferences->get($id, contain: ['Tags']);
+
+            $mailer = $this->prepEmail($id);
+            //do something here
+
+            //reset to for testing
+            $mailer->setTo('nilesj+test5@gmail.com');
+            // debug($conference);
+            // debug($mailer);
+            $mailer->deliver();
+            $this->render('view');
+        }
     }
 
 
