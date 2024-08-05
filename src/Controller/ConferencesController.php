@@ -16,6 +16,8 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Error\Debugger;
 use Cake\Log\Log;
+use Cake\Routing\Router;
+
 
 Date::setToStringFormat('yyyy-MM-dd');
 FrozenDate::setToStringFormat('yyyy-MM-dd');
@@ -392,9 +394,29 @@ class ConferencesController extends AppController
         $mailer = $this->getEmailer();
         $mailer->setEmailFormat('text');
 
-        //set view and variables
+        //set variables
+        $viewUrl = Router::url(['controller' => 'Conferences',
+                                'action' => 'view',
+                                $conference->id,
+                                '_full' => true
+        ]);
+        $editUrl = Router::url(['controller' => 'Conferences',
+                                'action' => 'edit',
+                                $conference->id,
+                                $conference->edit_key,
+                                '_full' => true
+        ]);
+        $contactUrl = Router::url(['controller' => 'Conferences',
+                                   'action' => 'about#curators',
+                                   '_full' => true
+        ]);
+
         $mailer->setViewVars(['site_name'=>Configure::read('site.name'),
-                              'content'=>$conference]);
+                              'viewUrl' => $viewUrl,
+                              'editUrl' => $editUrl,
+                              'contactUrl' => $contactUrl,
+                              'content'=>$conference,
+        ]);
 
         //gather and set values from $conference data
         $mailer->setSubject($conference->title);

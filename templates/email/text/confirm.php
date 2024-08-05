@@ -7,25 +7,16 @@ echo 'Thanks for adding your announcement to '.$site_name.'.';
 ?>
 
 The announcement data is copied below, and is also available at:
-    [FIXME link]
-<?php
-// echo $this->Html->url(array('action'=>'view', $conference->$id), $full=true);
-?>
+<?=$viewUrl?>
 
 
 If you need to edit or delete your announcement, use the unique edit/delete link:
-    [FIXME link]
-<?php
-// echo $this->Html->url($url=array('action'=>'edit', $conference->$id, $conference->$edit_key), $full=true);
-?>
+<?=$editUrl?>
 
 
 If you have any difficulties, questions, or comments, don't hesitate
 to contact the curators:
-[FIXME curator link]
-<?php
-// $this->Html->url($url=array('action'=>'about#curators'), $full=true);
-?>
+<?=$contactUrl?>
 
 
 
