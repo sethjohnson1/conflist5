@@ -1,12 +1,5 @@
 <?php
 use Cake\Core\Configure;
-// link elements for rss feed
-if ($tagstring) {
-    echo '<link type="application/rss+xml" rel="alternate" href="'.$tagstring.'.rss"/>';
-}
-else {
-    echo '<link type="application/rss+xml" rel="alternate" href="'.Configure::read('site.home').'/conferences/index.rss"/>';
-}
 ?>
 
 
@@ -155,13 +148,9 @@ else {
   <div style="float:right;">
 <?php
   if ($tagstring) {
-    echo $this->Html->link('RSS',array('controller'=>'Conferences','action'=>$tagstring.'.rss'));
-    echo "&nbsp;&nbsp;";
     echo $this->Html->link('ICS',array('controller'=>'Conferences','action'=>$tagstring.'.ics'));
   }
   else {
-    echo $this->Html->link('RSS',Configure::read('site.home').'/conferences/index.rss');
-    echo "&nbsp;&nbsp;";
     echo $this->Html->link('ICS',Configure::read('site.home').'/conferences/index.ics');
   }
 ?>

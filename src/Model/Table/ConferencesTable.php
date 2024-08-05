@@ -142,12 +142,12 @@ class ConferencesTable extends Table
 
     public function beforeSave(\Cake\Event\EventInterface $event, \Cake\Datasource\EntityInterface $entity, \ArrayObject $options){
         if (!$entity->edit_key){
-            $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";  
+            $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             $rando=substr( str_shuffle( $chars ), 0, 8);
             $entity->set('edit_key',$rando);
         }
         //no special handling for dates debug($entity) and you can see they are already Cake date objects
         return;
-   
+
     }
 }
