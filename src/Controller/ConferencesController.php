@@ -393,8 +393,8 @@ class ConferencesController extends AppController
         $mailer->setEmailFormat('text');
 
         //set view and variables
-        //$mailer->viewBuilder()->setTemplate('default')->setLayout('plain');
-        // $mailer->setViewVars(['content'=>$conference]);
+        $mailer->setViewVars(['site_name'=>Configure::read('site.name'),
+                              'content'=>$conference]);
 
         //gather and set values from $conference data
         $mailer->setSubject($conference->title);
@@ -420,7 +420,7 @@ class ConferencesController extends AppController
         return $mailer;
     }
 
-    public function testEmailSend($addr,$id) {
+    public function testEmailSend($id) {
         // a hack to test sending of emails
         // visit url with email address and id number
         // should send email filled with info from that conference id
@@ -436,11 +436,14 @@ class ConferencesController extends AppController
             //do something here
 
             //reset to for testing
-            $mailer->setTo('nilesj+test5@gmail.com');
+            $testEmail = Configure::read('site.test_email');
+            $mailer->setTo($testEmail);
             // debug($conference);
             // debug($mailer);
-            $mailer->deliver();
-            $this->render('view');
+            if ($mailer->deliver()) {
+                $this->Flash->success(__('email sent to '.$testEmail));
+            }
+            return $this->render('view');
         }
     }
 
