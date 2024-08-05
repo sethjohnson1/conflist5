@@ -176,6 +176,10 @@ class ConferencesController extends AppController
         $this->render('view');
     }
 
+    public function about() {
+        $view_title='About';
+        $this->set(compact('view_title'));
+    }
 
 
     /**
