@@ -90,11 +90,11 @@ class ConferencesTable extends Table
             ->maxLength('country', 100)
             ->notEmptyString('country');
 
-        $url_validation_error="Please enter a valid URL";
+        $url_validation_error="Please enter a valid URL, including https:// or http://";
         $validator
             ->notEmptyString('homepage',$url_validation_error)
             ->maxLength('homepage', 400)
-            ->url('homepage',$url_validation_error);
+            ->urlWithProtocol('homepage',$url_validation_error);
 
         $validator
             ->scalar('institution')

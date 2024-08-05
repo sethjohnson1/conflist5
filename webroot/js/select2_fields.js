@@ -47,6 +47,20 @@ function formatCountry(country){
 //add required decoration to tags dropdown
 $("label[for='tags-ids']").parent().addClass('required');
 
+//add protocol to homepage
+$('#homepage').on('change',function(){
+	$(this).val(getValidUrl($(this).val()));
+});
+
+//https://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
+function getValidUrl(url){
+    let newUrl = window.decodeURIComponent(url);
+    newUrl = newUrl.trim().replace(/\s/g, "");
+    if(/^(:\/\/)/.test(newUrl)) return `http${newUrl}`;
+    if(!/^(f|ht)tps?:\/\//i.test(newUrl)) return `https://${newUrl}`;
+    return newUrl;
+};
+
  //old below
  /*
  $("#TagTag").select2({
