@@ -345,21 +345,10 @@ class ConferencesController extends AppController
         if ($this->Conferences->save($conference)) {
             $this->Flash->success(__('The announcement has been saved.'));
 
-            // save successful; now send email
-
-            /* comment this out for now
-
-            // load data for email
-            $id = $conference->id;
-
-            $mailer = $this->prepEmail($id); // id number no longer optional
-            try {
-                $mailer->deliver();
-                $this->Flash->success(__('Confirmation email with announcement data sent to contact addresses.'));
+            $mailer = $this->prepEmail($conference->id);
+            if ($mailer->deliver()) {
+                $this->Flash->success(__('Confirmation emails have been sent.'));
             }
-            // catch exception and set error message??
-            */
-
             return $this->redirect(['action' => 'index']);
         }
         // else: save has failed
@@ -460,6 +449,8 @@ class ConferencesController extends AppController
             //reset to for testing
             $testEmail = Configure::read('site.test_email');
             $mailer->setTo($testEmail);
+            //$mailer->setCc($testEmail); // clear previously set cc
+            //$mailer->setBcc($testEmail); // clear previously set bcc
             // debug($conference);
             // debug($mailer);
             if ($mailer->deliver()) {
