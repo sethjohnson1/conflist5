@@ -311,9 +311,11 @@ echo
   $this->Html->link('View entry',
   array('action'=>'view', $conference['id']));?>
 
-<?php /* //print edit links
-  echo ' | '.$this->Html->link('Edit',
-  array('action'=>'edit', $conference['id'], $conference['edit_key'])); /**/?>
+<?php //print edit links
+  if ($showEdit) {
+    echo ' | <span class="edit-link">'.$this->Html->link('Edit',
+    array('action'=>'edit', $conference['id']))."</span>";
+  }?>
 
 
 </div>

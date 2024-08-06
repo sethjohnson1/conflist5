@@ -94,7 +94,16 @@ class ConferencesController extends AppController
             if ($key) $tag_dropdown[$key]=$tag->name;
         }
         //debug($conferences);
-        $this->set(compact('conferences','tags','view_title','tag_dropdown','tagstring','stags'));
+
+        // show edit button if cookie is set
+        $cookie = $this->request->getCookie('curator_cookie');
+        if ($cookie == Configure::read('site.curator_cookie')) {
+            $showEdit = true;
+        }
+        else {
+            $showEdit = false;
+        }
+        $this->set(compact('conferences','tags','view_title','tag_dropdown','tagstring','stags','showEdit'));
 
         if(null!==$this->request->getAttribute('params')['_ext']) {
             $file_ex=$this->request->getAttribute('params')['_ext'];
@@ -161,21 +170,6 @@ class ConferencesController extends AppController
 
     }
 
-    public function admin($id = null){
-        // do everything for standard view
-        $this->view($id);
-        // check if cookie is set and correct
-        $cookie = $this->request->getCookie('curator_cookie');
-        if ($cookie == Configure::read('site.curator_cookie')) {
-            // send the edit link to be displayed
-            $editKey= $this->Conferences->get($id, fields: ['edit_key']);
-            $editLink = '/conferences/edit/'.$id.'/'.$editKey['edit_key'];
-            $this->set(compact('editLink'));
-        }
-        // render the standard view
-        $this->render('view');
-    }
-
     public function about() {
         $view_title='About';
         $this->set(compact('view_title'));
@@ -220,7 +214,6 @@ class ConferencesController extends AppController
 
             if (!$error){
                 $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-                //try returning saveAndSend
                 return $this->saveAndSend($conference);
             }
             else $this->Flash->error(__($error)); //added ELSE here, was firing maybe bc redirect is in another function?
@@ -239,10 +232,14 @@ class ConferencesController extends AppController
     public function edit($id = null,$key=null)
     {
         $conference = $this->Conferences->get($id, contain: ['Tags']);
-        if ($key!=$conference->edit_key) throw new NotFoundException(__('Invalid conference'));
+        if ($key!=$conference->edit_key) {
+            $cookie = $this->request->getCookie('curator_cookie');
+            if ($cookie != Configure::read('site.curator_cookie')) {
+                throw new NotFoundException(__('Invalid conference'));
+            }
+        }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-            //try returning saveAndSend
             return $this->saveAndSend($conference);
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();

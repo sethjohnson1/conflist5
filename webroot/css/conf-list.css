@@ -762,10 +762,10 @@ div.conference {
     font-size: 90%;
 }
 
-h3.edit-link {
+.edit-link {
     font-weight: bold;
     background: #ef4;
-    padding: 1ex;
+    padding: 0 1ex;
 }
 
 /* Add form */
