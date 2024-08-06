@@ -10,6 +10,7 @@ Functionally is generally the same, with a few improvements.
 
 - Announcements that have been added or updated in the last 30 days are marked with [New].
 
+- When adding an announcement, the Start/End Date fields are formatted by users' locale and the [date picker is controlled by  their browser](https://www.w3schools.com/TAGS/att_input_type_date.asp).
 -------------
 
 # CakePHP Application Skeleton
