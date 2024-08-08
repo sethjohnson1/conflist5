@@ -70,36 +70,22 @@ class ConferencesController extends AppController
      */
     public function index($tagstring=null){
         $view_title='Upcoming Meetings';
-        $query = $this->Conferences->find()->contain(['Tags'])->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))])->select($this->publicFields());
+        // conditions for default list view
+        $conditions = ['end_date > '=>date('Y-m-d', strtotime("-1 week"))];
 
-        // process optional tagstring
-        $stags=[];
-        if ($tagstring!==null){
-            //pass this to select box to select values
-            $stags=explode('-',$tagstring);
-            $where=[];
-            //make a "where" array
-            foreach ($stags as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];
-            //add the Tag match to the existing $query
-            $query->matching('Tags',function (\Cake\ORM\Query $q) use($where){
-                return $q->where(['OR'=>$where]);
-            })->distinct(['Conferences.id']);
-        }
 
-        // variables for list view only
-        $this->set(compact('tagstring',
-                           'stags',
-        ));
-
-        return $this->renderList($view_title,$query);
+        return $this->renderList($view_title,$conditions,$tagstring);
     }
 
     public function search() {
         $searchVars = [];
+        $tagstring = null; //default
         $view_title='Search Announcements';
 
-        debug($this->request->getQuery());
 
+        debug($this->request->getQuery());
+        debug($this->request->getQuery('tag_select')); // only the last entry appears
+        debug($this->request->getQueryParams()); // is this different?
         // default search conditions
         $searchVars['after'] = new DateTime('-1 week');
         $conditions = array('start_date >' => $searchVars['after']);
@@ -120,14 +106,17 @@ class ConferencesController extends AppController
                 elseif ($field == 'mod_after') {
                     $conditions['modified >'] = $value;
                 }
-                elseif ($field == 'Tag') {
+                elseif ($field == 'tag_select') {
+                    // not working
+
                     $tagarray = array();
-                    foreach ($this->data['Search']['Tag'] as $t) {
-                        array_push($tagarray,
-                                   explode('.',$this->tag_name_from_id($t))[0]
-                        );
-                    }
-                    $tagstring = implode('-',$tagarray);
+                    $tagstring = $value; // temporary; doesn't work with multi
+                    // foreach ($this->data['Search']['Tag'] as $t) {
+                    //     array_push($tagarray,
+                    //                explode('.',$this->tag_name_from_id($t))[0]
+                    //     );
+                    // }
+                    // $tagstring = implode('-',$tagarray);
                 }
                 else {
                     $conditions[$field.' LIKE'] = '%'.$value.'%';
@@ -137,16 +126,39 @@ class ConferencesController extends AppController
         // variables for search view only
         $this->set(compact('searchVars',));
 
-        $query = $this->Conferences->find()->contain('Tags')->where($conditions)->order(['start_date ASC'])->select($this->publicFields());
-
-        debug($query);
-        return $this->renderList($view_title,$query);
+        return $this->renderList($view_title,$conditions,$tagstring);
     }
 
-    function renderList($view_title,$query) {
+    function renderList($view_title,$conditions,$tagstring) {
         /*
           process query for either list or search views
         */
+
+        $query = $this->Conferences->find()
+            ->contain('Tags')
+            ->where($conditions)
+            ->order(['start_date ASC'])
+            ->select($this->publicFields());
+
+        // process optional tagstring
+        $stags=[];
+        if ($tagstring!==null){
+            //pass this to select box to select values
+            $stags=explode('-',$tagstring);
+            $where=[];
+            //make a "where" array
+            foreach ($stags as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];
+            //add the Tag match to the existing $query
+            $query->matching('Tags',function (\Cake\ORM\Query $q) use($where){
+                return $q->where(['OR'=>$where]);
+            })->distinct(['Conferences.id']);
+        }
+
+
+
+
+        debug($query);
+
         $conferences = $this->paginate($query);
         // debug($conferences);
         $qtags=$this->Conferences->Tags->find('all');
@@ -179,6 +191,8 @@ class ConferencesController extends AppController
         $this->set(compact('view_title',
                            'conferences',
                            'tags',
+                           'tagstring',
+                           'stags',
                            'tag_dropdown',
                            'showEdit',
         ));
