@@ -16,7 +16,7 @@ Niles know</a>.</p>';
 
 echo "<h2>Results Below: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
 
-echo $this->Form->create(null,['type' => 'get']);
+echo $this->Form->create(null);
 echo "<br />";
 
   echo $this->Form->control('Tag',[

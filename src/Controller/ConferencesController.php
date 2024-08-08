@@ -81,7 +81,15 @@ class ConferencesController extends AppController
         $searchVars = [];
         $tagstring = null; //default
         $view_title='Search Announcements';
-
+        $new_query=[];
+        //if POST then build a search query and redirect
+        if ($this->request->is(['post'])) {
+            foreach ($this->request->getData() as $field=>$value){
+                if (!\in_array($field,$this->allowedSearchParams()) || empty($value)) continue;
+                $new_query[$field]=$value;
+            }
+            return $this->redirect(['action' => 'search','?'=>$new_query]);
+        }
 
         debug($this->request->getQuery());
         //debug($this->request->getQuery('tag_select')); //use tag_select[] for the control name to pass array
@@ -90,8 +98,10 @@ class ConferencesController extends AppController
         $searchVars['after'] = new DateTime('-1 week');
         $conditions = array('start_date >' => $searchVars['after']);
 
+
         // process querystring from url
         foreach ($this->request->getQuery() as $field => $value) {
+            if (!\in_array($field,$this->allowedSearchParams())) continue;
             if ($value != '') {
                 $searchVars[$field] = $value;
                 if ($field == 'before') {
@@ -217,6 +227,21 @@ class ConferencesController extends AppController
             'created',
             'modified',
             'id',
+        ];
+    }
+
+    function allowedSearchParams(){
+        return [
+            'tag_select',
+            'after',
+            'before',
+            'title',
+            'country',
+            'institution',
+            'meeting_type',
+            'after',
+            'before'
+
         ];
     }
 
