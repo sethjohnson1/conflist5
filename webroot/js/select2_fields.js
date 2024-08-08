@@ -16,7 +16,8 @@ $(document).ready(function() {
         sorter: $sortByMatchIndex
  });
 $("#country").select2({
-    placeholder: "Country...",
+    placeholder: "Select a country...",
+    allowClear: true,
     //allowClear: true,
     width: "100%",
     /* sj - I don't think we need a custom matcher with the current approach, but it might need to be tweaked?
@@ -27,6 +28,9 @@ matcher: function(term, text) {
     templateSelection: formatCountry,
 	sortResults: $sortByMatchIndex
 });
+
+//add the placeholder ourselves! Can't get it to work, might have to do with use of <optgroup>
+$('.input:has(label[for="country"]) .select2-selection__placeholder').text('Select country...');
 
 function formatCountry(country){
 	//must be return as jQuery obj
