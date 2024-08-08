@@ -65,7 +65,7 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/conferences/search', ['controller' => 'Conferences', 'action' => 'search']);
         $builder->connect('/conferences/about', ['controller' => 'Conferences', 'action' => 'about']);
 
-        $builder->connect('/conferences/curator_cookie', ['controller' => 'Conferences', 'action' => 'curatorCookie']);
+        $builder->connect('/conferences/curatorCookie', ['controller' => 'Conferences', 'action' => 'curatorCookie']);
         $builder->connect('/conferences/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
         $builder->connect('/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
         /*
