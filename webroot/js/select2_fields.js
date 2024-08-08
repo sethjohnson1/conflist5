@@ -1,31 +1,27 @@
 //this is for all the select2 boxes . . very easy
 $(document).ready(function() {
  var sortByMatchIndex;
- $sortByMatchIndex = function(results, container, query) {
-     if (query.term) {
-	 // use the built in javascript sort function
-	 return results.sort(function(a, b) {
-		 return 2*(
-			   a.text.toUpperCase().indexOf(query.term.toUpperCase()) > b.text.toUpperCase().indexOf(query.term.toUpperCase())
-			   )-1;
-	     });
-     }
-     return results;
+ $sortByMatchIndex = function(results) {
+    var query = $('.select2-search__field').val().toLowerCase();
+    return results.sort(function(a, b) {
+      return a.text.toLowerCase().indexOf(query) -
+        b.text.toLowerCase().indexOf(query);
+    });
  };
 
  $("#tags-ids, #tag").select2({
 	placeholder: "Select subject tags",
 	allowClear: true,
         width: "100%",
-        sortResults: $sortByMatchIndex
- }); 
+        sorter: $sortByMatchIndex
+ });
 $("#country").select2({
     placeholder: "Country...",
     //allowClear: true,
     width: "100%",
     /* sj - I don't think we need a custom matcher with the current approach, but it might need to be tweaked?
-matcher: function(term, text) { 
-     return text.toUpperCase().indexOf(term.toUpperCase())>=0; 
+matcher: function(term, text) {
+     return text.toUpperCase().indexOf(term.toUpperCase())>=0;
 },*/
     templateResult: formatCountry,
     templateSelection: formatCountry,
@@ -38,7 +34,7 @@ function formatCountry(country){
 	//if it has children, then its an optgroup (Americas, Asia, etc)
 	if (typeof(country.children)!='undefined') text=country.text;
 	//otherwise stick with the ID
-	return text; 
+	return text;
 	/* left here as example, if you add HTML need to return as jQ obj*/
 	var ctyObj=$("<span style='color:black;'>"+text+"</span>");
 	return ctyObj;
@@ -68,24 +64,24 @@ function getValidUrl(url){
 	allowClear: true,
         width: "100%",
         sortResults: $sortByMatchIndex
- }); 
- 
+ });
+
  $("#SearchTag").select2({
 	placeholder: "Select subject tags",
 	allowClear: true,
         width: "100%",
         sortResults: $sortByMatchIndex
- }); 
- 
+ });
+
  $("#ConferenceCountry").select2({
         placeholder: "Country...",
         //allowClear: true,
         width: "100%",
-	matcher: function(term, text) { 
-	     return text.toUpperCase().indexOf(term.toUpperCase())>=0; 
+	matcher: function(term, text) {
+	     return text.toUpperCase().indexOf(term.toUpperCase())>=0;
 	},
 	sortResults: $sortByMatchIndex
 
- }); 
+ });
  */
 });
