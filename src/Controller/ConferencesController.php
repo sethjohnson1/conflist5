@@ -71,6 +71,8 @@ class ConferencesController extends AppController
     public function index($tagstring=null){
         $view_title='Upcoming Meetings';
         $query = $this->Conferences->find()->contain(['Tags'])->order(['start_date ASC'])->where(['end_date > '=>date('Y-m-d', strtotime("-1 week"))])->select($this->publicFields());
+
+        // process optional tagstring
         $stags=[];
         if ($tagstring!==null){
             //pass this to select box to select values
@@ -84,8 +86,69 @@ class ConferencesController extends AppController
             })->distinct(['Conferences.id']);
         }
 
+        // variables for list view only
+        $this->set(compact('tagstring',
+                           'stags',
+        ));
+
+        return $this->renderList($view_title,$query);
+    }
+
+    public function search() {
+        $searchVars = [];
+        $view_title='Search Announcements';
+
+        debug($this->request->getQuery());
+
+        // default search conditions
+        $searchVars['after'] = new DateTime('-1 week');
+        $conditions = array('start_date >' => $searchVars['after']);
+
+        // process querystring from url
+        foreach ($this->request->getQuery() as $field => $value) {
+            if ($value != '') {
+                $searchVars[$field] = $value;
+                if ($field == 'before') {
+                    $conditions['start_date <'] = $value;
+                }
+                elseif ($field == 'after') {
+                    $conditions['start_date >'] = $value;
+                }
+                elseif ($field == 'mod_before') {
+                    $conditions['modified <'] = $value;
+                }
+                elseif ($field == 'mod_after') {
+                    $conditions['modified >'] = $value;
+                }
+                elseif ($field == 'Tag') {
+                    $tagarray = array();
+                    foreach ($this->data['Search']['Tag'] as $t) {
+                        array_push($tagarray,
+                                   explode('.',$this->tag_name_from_id($t))[0]
+                        );
+                    }
+                    $tagstring = implode('-',$tagarray);
+                }
+                else {
+                    $conditions[$field.' LIKE'] = '%'.$value.'%';
+                }
+            }
+        }
+        // variables for search view only
+        $this->set(compact('searchVars',));
+
+        $query = $this->Conferences->find()->contain('Tags')->where($conditions)->order(['start_date ASC'])->select($this->publicFields());
+
+        debug($query);
+        return $this->renderList($view_title,$query);
+    }
+
+    function renderList($view_title,$query) {
+        /*
+          process query for either list or search views
+        */
         $conferences = $this->paginate($query);
-        //debug($conferences);
+        // debug($conferences);
         $qtags=$this->Conferences->Tags->find('all');
         $tags = $qtags->toArray();
         $tag_dropdown=[];
@@ -95,6 +158,14 @@ class ConferencesController extends AppController
         }
         //debug($conferences);
 
+        if(null!==$this->request->getAttribute('params')['_ext']) {
+            $file_ex=$this->request->getAttribute('params')['_ext'];
+            // if ($file_ex=='rss') $this -> render('rss/index');
+            $this->set(compact('conferences'));
+            $this->viewBuilder()->setOption('serialize', ['conferences']);
+            //$this -> render('ajax');
+        }
+
         // show edit button if cookie is set
         $cookie = $this->request->getCookie('curator_cookie');
         if ($cookie == Configure::read('site.curator_cookie')) {
@@ -103,15 +174,15 @@ class ConferencesController extends AppController
         else {
             $showEdit = false;
         }
-        $this->set(compact('conferences','tags','view_title','tag_dropdown','tagstring','stags','showEdit'));
 
-        if(null!==$this->request->getAttribute('params')['_ext']) {
-            $file_ex=$this->request->getAttribute('params')['_ext'];
-            if ($file_ex=='rss') $this -> render('rss/index');
-            $this->set(compact('conferences'));
-            $this->viewBuilder()->setOption('serialize', ['conferences']);
-            //$this -> render('ajax');
-        }
+        // variables for both list and search view
+        $this->set(compact('view_title',
+                           'conferences',
+                           'tags',
+                           'tag_dropdown',
+                           'showEdit',
+        ));
+        return $this->render('index');
     }
 
     //returns array of fields to select, omitting sensitive data
@@ -143,6 +214,11 @@ class ConferencesController extends AppController
             $return=$tar[0];
         }
         return $return;
+    }
+
+    function tag_name_from_id($tagid) {
+        $t = $this->Tag->find('first',array('conditions'=>array('Tag.id'=>$tagid)));
+        return $t['Tag']['name'];
     }
 
     /**
@@ -434,10 +510,10 @@ class ConferencesController extends AppController
 
     public function testEmailSend($id) {
         // a hack to test sending of emails
-        // visit url with email address and id number
+        // visit url with id number
         // should send email filled with info from that conference id
-        //
-        // (none of this works at the moment)
+        // to address is rest to site.test_email address
+        // uncomment lines below to also reset cc and bcc lines
         //
         // protected from public by curator cookie
         $cookie = $this->request->getCookie('curator_cookie');
@@ -458,6 +534,9 @@ class ConferencesController extends AppController
                 $this->Flash->success(__('email sent to '.$testEmail));
             }
             return $this->render('view');
+        }
+        else {
+            throw new NotFoundException(__('Invalid conference'));
         }
     }
 

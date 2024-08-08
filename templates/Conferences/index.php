@@ -6,7 +6,7 @@ use Cake\Core\Configure;
 <?php
 
 // display search if requested
-if (isset($search) && $search) {
+if (isset($searchVars)) {
 echo '<h1>'.$view_title.'</h1>';
 
 echo '<p>Currently the search only performs simple date comparison and basic
@@ -14,37 +14,71 @@ string matching in the indicated fields.  If you have more sophisticated search
 needs, please <a href="http://nilesjohnson.net/contact.html" target="blank">let
 Niles know</a>.</p>';
 
-echo $this->Form->create('Search');
+echo $this->Form->create(null,['type' => 'get']);
 echo "<br />";
 
-echo $this->Form->input('Tag', array('label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids));
-echo $this->Form->input('after', array('label'=>'Begins after', 'type'=>'text', 'div'=>'input datefield', 'after'=>'yyyy-mm-dd'));
-echo $this->Form->input('before', array('label'=>'Begins before', 'type'=>'text', 'div'=>'input datefield', 'after'=>'yyyy-mm-dd'));
+  echo $this->Form->control('Tag',[
+    'options'=>$tag_dropdown,
+    'multiple',
+    'label'=>'Subject Tags',
+    'name'=>'tag_select',
+  ]);
+// echo $this->Form->control('Tag', array('label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids));
+echo $this->Form->control('after',
+                          array('label'=>'Begins after',
+                                'value' => $searchVars['after'] ?? '',
+                                'type'=>'date',
+                                'div'=>'input datefield',
+                          ));
+echo $this->Form->control('before',
+                          array('label'=>'Begins before',
+                                'value' => $searchVars['before'] ?? '',
+                                'type'=>'date',
+                                'div'=>'input datefield',
+                          ));
 
-echo $this->Form->input('title', array('label' => 'Title contains'));
-//echo $this->Form->input('city', array('label'=>'City and State/Province'));
-echo $this->Form->input('country', array('label'=>'Country contains', 'type'=>'text'));
-//echo $this->Form->input('homepage', array('label'=>'Conference website'));
-echo $this->Form->input('institution', array('label'=>'Host institution contains'));
-echo $this->Form->input('meeting_type', array('label'=>'Meeting type contains'));
-//echo $this->Form->input('contact_name', array('label'=>'Contact Name(s), comma separated'));
-echo $this->Form->input('description', array('label'=>'Description contains'));
+echo $this->Form->control('title',
+                          array('label' => 'Title contains',
+                                'value' => $searchVars['title'] ?? '',
+                          ));
+echo $this->Form->control('country',
+                          array('label'=>'Country contains',
+                                'value' => $searchVars['country'] ?? '',
+                                'type'=>'text',
+                          ));
+echo $this->Form->control('institution',
+                          array('label'=>'Host institution contains',
+                                'value' => $searchVars['institution'] ?? '',
+                          ));
+echo $this->Form->control('meeting_type',
+                          array('label'=>'Meeting type contains',
+                                'value' => $searchVars['type'] ?? '',
+                          ));
+echo $this->Form->control('description',
+                          array('label'=>'Description contains',
+                                'value' => $searchVars['description'] ?? '',
+                          ));
 
-//echo '<div class="input"><p>Description Preview:</p><div class="wmd-preview"></div></div>';
+echo $this->Form->control('mod_after',
+                          array('label'=>'Announcement posted or modified after',
+                                'value' => $searchVars['mod_after'] ?? '',
+                                'type'=>'date',
+                                'div'=>'input datefield',
+                                'after'=>'yyyy-mm-dd',
+                          ));
+echo $this->Form->control('mod_before',
+                          array('label'=>'Announcement posted or modified before',
+                                'value' => $searchVars['mod_before'] ?? '',
+                                'type'=>'date',
+                                'div'=>'input datefield',
+                                'before'=>'yyyy-mm-dd',
+                          ));
 
-/*
-if (!isset($edit)) {
-  echo '<div id="ConferenceRecaptcha" class="required">';
-  echo $this->Form->label('recaptcha','Captcha task.');
-  echo $this->Recaptcha->display();
-  echo '</div>';
-}
-*/
-echo $this->Form->end('Submit');
-if ($results) {
-  echo "<hr/>";
-  echo "<h2>Results: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
-  }
+echo $this->Form->submit('Submit');
+echo $this->Form->end();
+
+echo "<hr/>";
+echo "<h2>Results: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
 }
 
 
@@ -232,8 +266,8 @@ if ($new_subsort != $curr_subsort) {
   $subsort_counter = $subsort_counter % 2;
  }
 
-
-if ($conference['modified']->wasWithinLast('30 days')) {
+// check if 'modified' is set and recent
+if ($conference['modified'] && $conference['modified']->wasWithinLast('30 days')) {
 $titleClass = "title recent";
 $modInfo = '<span class="modinfo" style="padding-left: 1em; padding-right: 1em; font-size: 80%; font-style: italic; color:green;">[New]</span>';
 }

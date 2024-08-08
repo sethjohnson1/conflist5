@@ -58,11 +58,13 @@ return function (RouteBuilder $routes): void {
         $builder->setExtensions(['rss','ics','json','xml']);
         //$builder->setExtensions(['rss','ics']);
         $builder->connect('/', ['controller' => 'Conferences', 'action' => 'index']);
-        
+
         //$builder->connect('/conferences/view/*', ['controller' => 'Conferences', 'action' => 'view'],['persist'=>'id']);
         $builder->connect('/conferences/view/{id}', ['controller' => 'Conferences', 'action' => 'view'])->setPass(['id']);
         $builder->connect('/conferences/add', ['controller' => 'Conferences', 'action' => 'add'])->setPass(['id']);
-        
+        $builder->connect('/conferences/search', ['controller' => 'Conferences', 'action' => 'search']);
+        $builder->connect('/conferences/about', ['controller' => 'Conferences', 'action' => 'about']);
+
         $builder->connect('/conferences/curator_cookie', ['controller' => 'Conferences', 'action' => 'curatorCookie']);
         $builder->connect('/conferences/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
         $builder->connect('/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
@@ -71,7 +73,7 @@ return function (RouteBuilder $routes): void {
          */
         $builder->connect('/pages/*', 'Pages::display');
 
-        
+
 
         /*
          * Connect catchall routes for all controllers.
@@ -105,4 +107,3 @@ return function (RouteBuilder $routes): void {
      * ```
      */
 };
-
