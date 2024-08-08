@@ -84,8 +84,8 @@ class ConferencesController extends AppController
 
 
         debug($this->request->getQuery());
-        debug($this->request->getQuery('tag_select')); // only the last entry appears
-        debug($this->request->getQueryParams()); // is this different?
+        //debug($this->request->getQuery('tag_select')); //use tag_select[] for the control name to pass array
+        //debug($this->request->getQueryParams()); // is this different?
         // default search conditions
         $searchVars['after'] = new DateTime('-1 week');
         $conditions = array('start_date >' => $searchVars['after']);
@@ -107,10 +107,10 @@ class ConferencesController extends AppController
                     $conditions['modified >'] = $value;
                 }
                 elseif ($field == 'tag_select') {
-                    // not working
-
-                    $tagarray = array();
+                    //note that 'tag_select' could be an array
+                    
                     $tagstring = $value; // temporary; doesn't work with multi
+                    debug($tagstring);
                     // foreach ($this->data['Search']['Tag'] as $t) {
                     //     array_push($tagarray,
                     //                explode('.',$this->tag_name_from_id($t))[0]
@@ -144,7 +144,8 @@ class ConferencesController extends AppController
         $stags=[];
         if ($tagstring!==null){
             //pass this to select box to select values
-            $stags=explode('-',$tagstring);
+            if (!\is_array($tagstring)) $stags=explode('-',$tagstring);
+            else $stags=$tagstring;
             $where=[];
             //make a "where" array
             foreach ($stags as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];

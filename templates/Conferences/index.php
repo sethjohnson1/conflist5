@@ -23,7 +23,8 @@ echo "<br />";
     'options'=>$tag_dropdown,
     'multiple',
     'label'=>'Subject tags',
-    'name'=>'tag_select',
+    'name'=>'tag_select[]',
+    'value'=>$tagstring,
   ]);
 // echo $this->Form->control('Tag', array('label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids));
 echo $this->Form->control('after',
