@@ -16,7 +16,12 @@ Niles know</a>.</p>';
 
 echo "<h2>Results Below: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
 
+  $sform_wrapper = [
+      'inputContainer' => '<div class="advanced-search-control {{type}}{{required}}">{{content}}<span class="after-text">{{after}}</span></div>',
+  ];
+
 echo $this->Form->create(null);
+$this->Form->setTemplates($sform_wrapper);  
 echo "<br />";
 
   echo $this->Form->control('Tag',[
@@ -25,6 +30,7 @@ echo "<br />";
     'label'=>'Subject tags',
     'name'=>'tag_select[]',
     'value'=>$tagstring,
+    'templateVars'=>['after'=>'Example after text'],
   ]);
 // echo $this->Form->control('Tag', array('label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids));
 echo $this->Form->control('after',
