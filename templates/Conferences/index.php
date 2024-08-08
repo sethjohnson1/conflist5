@@ -14,13 +14,15 @@ string matching in the indicated fields.  If you have more sophisticated search
 needs, please <a href="http://nilesjohnson.net/contact.html" target="blank">let
 Niles know</a>.</p>';
 
+echo "<h2>Results Below: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
+
 echo $this->Form->create(null,['type' => 'get']);
 echo "<br />";
 
   echo $this->Form->control('Tag',[
     'options'=>$tag_dropdown,
     'multiple',
-    'label'=>'Subject Tags',
+    'label'=>'Subject tags',
     'name'=>'tag_select',
   ]);
 // echo $this->Form->control('Tag', array('label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids));
@@ -78,8 +80,7 @@ echo $this->Form->submit('Submit');
 echo $this->Form->end();
 
 echo "<hr/>";
-echo "<h2>Results: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
-}
+} //end if
 
 
 // else: default display
