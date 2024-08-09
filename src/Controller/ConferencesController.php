@@ -72,14 +72,18 @@ class ConferencesController extends AppController
         $view_title='Upcoming Meetings';
         // conditions for default list view
         $conditions = ['end_date > '=>date('Y-m-d', strtotime("-1 week"))];
-
-
-        return $this->renderList($view_title,$conditions,$tagstring);
+        if ($tagstring != null) {
+            $tagarray = explode('-',$tagstring);
+        }
+        else {
+            $tagarray = null;
+        }
+        return $this->renderList($view_title,$conditions,$tagarray);
     }
 
     public function search() {
         $searchVars = [];
-        $tagstring = null; //default
+        $tagarray = null; //default
         $view_title='Search Announcements';
         $new_query=[];
         //if POST then build a search query and redirect
@@ -91,13 +95,11 @@ class ConferencesController extends AppController
             return $this->redirect(['action' => 'search','?'=>$new_query]);
         }
 
-        debug($this->request->getQuery());
-        //debug($this->request->getQuery('tag_select')); //use tag_select[] for the control name to pass array
-        //debug($this->request->getQueryParams()); // is this different?
-        // default search conditions
+        // debug($this->request->getQuery());
+
+        // defaults
         $searchVars['after'] = new DateTime('-1 week');
         $conditions = array('start_date >' => $searchVars['after']);
-
 
         // process querystring from url
         foreach ($this->request->getQuery() as $field => $value) {
@@ -117,16 +119,8 @@ class ConferencesController extends AppController
                     $conditions['modified >'] = $value;
                 }
                 elseif ($field == 'tag_select') {
-                    //note that 'tag_select' could be an array
-
-                    $tagstring = $value; // temporary; doesn't work with multi
-                    debug($tagstring);
-                    // foreach ($this->data['Search']['Tag'] as $t) {
-                    //     array_push($tagarray,
-                    //                explode('.',$this->tag_name_from_id($t))[0]
-                    //     );
-                    // }
-                    // $tagstring = implode('-',$tagarray);
+                    //'tag_select' will be an array
+                    $tagarray = $value;
                 }
                 else {
                     $conditions[$field.' LIKE'] = '%'.$value.'%';
@@ -136,12 +130,13 @@ class ConferencesController extends AppController
         // variables for search view only
         $this->set(compact('searchVars',));
 
-        return $this->renderList($view_title,$conditions,$tagstring);
+        return $this->renderList($view_title,$conditions,$tagarray);
     }
 
-    function renderList($view_title,$conditions,$tagstring) {
+    function renderList($view_title,$conditions,$tagarray) {
         /*
           process query for either list or search views
+          $tagarray should be null or an array of short tag names (ac, ag, at, etc.)
         */
 
         $query = $this->Conferences->find()
@@ -150,25 +145,18 @@ class ConferencesController extends AppController
             ->order(['start_date ASC'])
             ->select($this->publicFields());
 
-        // process optional tagstring
-        $stags=[];
-        if ($tagstring!==null){
-            //pass this to select box to select values
-            if (!\is_array($tagstring)) $stags=explode('-',$tagstring);
-            else $stags=$tagstring;
+        // process optional tagarray
+        if ($tagarray!==null){
             $where=[];
             //make a "where" array
-            foreach ($stags as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];
+            foreach ($tagarray as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];
             //add the Tag match to the existing $query
             $query->matching('Tags',function (\Cake\ORM\Query $q) use($where){
                 return $q->where(['OR'=>$where]);
             })->distinct(['Conferences.id']);
         }
 
-
-
-
-        debug($query);
+        // debug($query);
 
         $conferences = $this->paginate($query);
         // debug($conferences);
@@ -202,8 +190,7 @@ class ConferencesController extends AppController
         $this->set(compact('view_title',
                            'conferences',
                            'tags',
-                           'tagstring',
-                           'stags',
+                           'tagarray',
                            'tag_dropdown',
                            'showEdit',
         ));

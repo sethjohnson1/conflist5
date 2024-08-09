@@ -25,7 +25,7 @@ echo $this->Form->control('Tag', array(
     'multiple',
     'label'=>'Subject tags',
     'name'=>'tag_select[]',
-    'value'=>$tagstring,
+    'value'=>$tagarray,
 ));
 echo $this->Form->control('after', array(
     'label'=>'Begins after',
@@ -214,7 +214,7 @@ else {
   echo $this->Form->control('Tag',[
     'options'=>$tag_dropdown,
     'multiple',
-    'value'=>$stags,
+    'value'=>$tagarray,
     'label'=>'Subject Tags',
     'name'=>'tag_select',
     'onchange'=>"updateTagLink('".$this->Url->build(['controller'=>'Conferences','action'=>'index'],['fullBase'=>true])."');",
