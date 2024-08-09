@@ -16,72 +16,66 @@ Niles know</a>.</p>';
 
 echo "<h2>Results Below: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
 
-  $sform_wrapper = [
-      'inputContainer' => '<div class="advanced-search-control {{type}}{{required}}">{{content}}<span class="after-text">{{after}}</span></div>',
-  ];
-
 echo $this->Form->create(null);
-$this->Form->setTemplates($sform_wrapper);  
+$this->Form->setTemplates($form_wrapper);
 echo "<br />";
 
-  echo $this->Form->control('Tag',[
+echo $this->Form->control('Tag', array(
     'options'=>$tag_dropdown,
     'multiple',
     'label'=>'Subject tags',
     'name'=>'tag_select[]',
     'value'=>$tagstring,
-    'templateVars'=>['after'=>'Example after text'],
-  ]);
-// echo $this->Form->control('Tag', array('label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids));
-echo $this->Form->control('after',
-                          array('label'=>'Begins after',
-                                'value' => $searchVars['after'] ?? '',
-                                'type'=>'date',
-                                'div'=>'input datefield',
-                          ));
-echo $this->Form->control('before',
-                          array('label'=>'Begins before',
-                                'value' => $searchVars['before'] ?? '',
-                                'type'=>'date',
-                                'div'=>'input datefield',
-                          ));
+));
+echo $this->Form->control('after', array(
+    'label'=>'Begins after',
+    'value' => $searchVars['after'] ?? '',
+    'type'=>'date',
+    'div'=>'input datefield',
+));
+echo $this->Form->control('before', array(
+    'label'=>'Begins before',
+    'value' => $searchVars['before'] ?? '',
+    'type'=>'date',
+    'div'=>'input datefield',
+));
 
-echo $this->Form->control('title',
-                          array('label' => 'Title contains',
-                                'value' => $searchVars['title'] ?? '',
-                          ));
-echo $this->Form->control('country',
-                          array('label'=>'Country contains',
-                                'value' => $searchVars['country'] ?? '',
-                                'type'=>'text',
-                          ));
-echo $this->Form->control('institution',
-                          array('label'=>'Host institution contains',
-                                'value' => $searchVars['institution'] ?? '',
-                          ));
-echo $this->Form->control('meeting_type',
-                          array('label'=>'Meeting type contains',
-                                'value' => $searchVars['type'] ?? '',
-                          ));
-echo $this->Form->control('description',
-                          array('label'=>'Description contains',
-                                'value' => $searchVars['description'] ?? '',
-                          ));
+echo $this->Form->control('title', array(
+    'label' => 'Title contains',
+    'value' => $searchVars['title'] ?? '',
+));
+echo $this->Form->control('country', array(
+    'label'=>'Country contains',
+    'value' => $searchVars['country'] ?? '',
+    'type'=>'text',
+));
+echo $this->Form->control('institution', array(
+    'label'=>'Host institution contains',
+    'value' => $searchVars['institution'] ?? '',
+));
+echo $this->Form->control('meeting_type', array(
+    'label'=>'Meeting type contains',
+    'value' => $searchVars['type'] ?? '',
+));
+echo $this->Form->control('description', array(
+    'label'=>'Description contains',
+    'value' => $searchVars['description'] ?? '',
+));
 
-echo $this->Form->control('mod_after',
-                          array('label'=>'Announcement posted or modified after',
-                                'value' => $searchVars['mod_after'] ?? '',
-                                'type'=>'date',
-                                'div'=>'input datefield',
-                                'after'=>'yyyy-mm-dd',
-                          ));
-echo $this->Form->control('mod_before',
-                          array('label'=>'Announcement posted or modified before',
-                                'value' => $searchVars['mod_before'] ?? '',
-                                'type'=>'date',
-                                'div'=>'input datefield',
-                                'before'=>'yyyy-mm-dd',
-                          ));
+echo $this->Form->control('mod_after', array(
+    'label'=>'Announcement posted or modified after',
+    'value' => $searchVars['mod_after'] ?? '',
+    'type'=>'date',
+    'div'=>'input datefield',
+    'after'=>'yyyy-mm-dd',
+));
+echo $this->Form->control('mod_before', array(
+    'label'=>'Announcement posted or modified before',
+    'value' => $searchVars['mod_before'] ?? '',
+    'type'=>'date',
+    'div'=>'input datefield',
+    'before'=>'yyyy-mm-dd',
+));
 
 echo $this->Form->submit('Submit');
 echo $this->Form->end();

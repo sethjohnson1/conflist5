@@ -7,11 +7,11 @@ $addedit='Edit';
 echo '<h1>'.$addedit.' Meeting Information</h1>';
 
 echo $this->Form->create($conference);
+$this->Form->setTemplates($form_wrapper);
 echo $this->Form->submit('Submit');
 echo "<br />";
 if (isset($edit)){
 	echo $this->Form->control('id');
-	//echo $this->Form->input('edit_key', array('type'=>'hidden'));
 }
 
 echo $this->Form->control('title');
@@ -20,15 +20,50 @@ echo $this->Form->control('end_date');
 echo $this->Form->control('city', ['label'=>'City and State/Province']);
 
 echo "\n"."<!-- country data from https://github.com/mledoze/countries licensed under Open Database License 1.0 -->\n";
-echo $this->Form->control('country', ['type'=>'select', 'options'=>$countries, 'default'=>'country', 'after'=>'Type to narrow options','empty'=>'Choose country...']);
-echo $this->Form->control('homepage', ['label'=>'Conference website']);
-echo $this->Form->control('institution', ['label'=>'Host institution', 'after'=>'University, institute, etc.']);
-echo $this->Form->control('meeting_type', ['after'=>'e.g. conference, summer school, special session, etc.']);
-echo $this->Form->control('tags._ids', ['label'=>'Subject tags', 'after'=>'Arxiv subject areas.  Select one or more; type to narrow options', 'multiple'=>true, 'default'=>$tagids,'empty'=>false,'required']);
-echo $this->Form->control('contact_name', ['label'=>'Contact Name(s), comma separated']);
-echo $this->Form->control('contact_email', ['label'=>'Contact Email(s), comma separated', 'after'=>'never displayed publicly; confirmation and edit/delete codes will be sent to these addresses']);
-echo $this->Form->control('contact_password',['tabindex'=>'-1','style'=>'display:none!important','autocomplete'=>'off','label'=>['text'=>'<span style="display:none!important;">Do not leave this field blank if you would like this entry to vanish</span>','escape'=>false]]);
-echo $this->Form->control('description', ['label'=>['text'=>'Description: <br/><span style="font-size:80%;">Enter text, HTML, or <a href="http://daringfireball.net/projects/markdown/">Markdown</a>.</span>','escape'=>false], 'rows' => '10']);
+echo $this->Form->control('country', [
+    'type'=>'select',
+    'options'=>$countries,
+    'default'=>'country',
+    'templateVars'=>['after'=>'Type to narrow options.'],
+    'empty'=>'Choose country...'
+]);
+echo $this->Form->control('homepage', [
+    'label'=>'Conference website',
+]);
+echo $this->Form->control('institution', [
+    'label'=>'Host institution',
+    'templateVars'=>['after'=>'University, institute, etc.'],
+]);
+echo $this->Form->control('meeting_type', [
+    'after'=>'e.g. conference, summer school, special session, etc.'
+]);
+echo $this->Form->control('tags._ids', [
+    'label'=>'Subject tags',
+    'templateVars'=>['after'=>'Arxiv subject areas.  Select one or more; type to narrow options.'],
+    'multiple'=>true,
+    'default'=>$tagids,
+    'empty'=>false,
+    'required'
+]);
+echo $this->Form->control('contact_name', [
+    'label'=>'Contact Name(s), comma separated'
+]);
+echo $this->Form->control('contact_email', [
+    'label'=>'Contact Email(s), comma separated',
+    'templateVars'=>['after'=>'Never displayed publicly. Confirmation and edit/delete codes will be sent to these addresses.'],
+]);
+echo $this->Form->control('contact_password', [
+    'tabindex'=>'-1',
+    'style'=>'display:none!important',
+    'autocomplete'=>'off',
+    'label'=>['text'=>'<span style="display:none!important;">Do not leave this field blank if you would like this entry to vanish</span>',
+              'escape'=>false]
+]);
+echo $this->Form->control('description', [
+    'label'=>['text'=>'Description: <br/><span style="font-size:80%;">Enter text, HTML, or <a href="http://daringfireball.net/projects/markdown/">Markdown</a>.</span>',
+              'escape'=>false],
+    'rows' => '10'
+]);
 
 echo '<div class="input"><p>Description Preview:</p><div class="wmd-preview"></div></div>';
 

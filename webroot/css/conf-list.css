@@ -833,6 +833,10 @@ div.datefield {
     font-family: monospace;
 }
 
+.after-text {
+    font-weight: normal;
+    font-style: italic;
+}
 /* prevent white/white text/background */
 .select2-results__option{
 	color:black;

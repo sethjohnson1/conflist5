@@ -118,7 +118,7 @@ class ConferencesController extends AppController
                 }
                 elseif ($field == 'tag_select') {
                     //note that 'tag_select' could be an array
-                    
+
                     $tagstring = $value; // temporary; doesn't work with multi
                     debug($tagstring);
                     // foreach ($this->data['Search']['Tag'] as $t) {
@@ -207,6 +207,7 @@ class ConferencesController extends AppController
                            'tag_dropdown',
                            'showEdit',
         ));
+        $this->setFormTemplate();
         return $this->render('index');
     }
 
@@ -336,6 +337,7 @@ class ConferencesController extends AppController
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
         $this->set(compact('conference', 'tags','countries'));
+        $this->setFormTemplate();
     }
 
     /**
@@ -580,6 +582,14 @@ class ConferencesController extends AppController
         }
     }
 
-
+    function setFormTemplate() {
+        // there must be a better way to do this,
+        // but I don't know what it is;
+        // making a whole new helper seems too much
+        $form_wrapper = [
+            'inputContainer' => '<div class="input {{type}}{{required}}">{{content}}<span class="after-text">{{after}}</span></div>',
+        ];
+        $this->set(compact('form_wrapper'));
+    }
 
 } // close class
