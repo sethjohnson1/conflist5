@@ -172,7 +172,7 @@ else {
   properly, please let Niles know.</p>
 -->
 
-  <p>Additional update notes are available in the <a href="https://github.com/nilesjohnson/conference-list" target="github">git repository</a> (GitHub).</p>
+  <p>Additional update notes are available in the <a href="https://github.com/sethjohnson1/conflist5" target="github">git repository</a> (GitHub).</p>
 
 </div>
 

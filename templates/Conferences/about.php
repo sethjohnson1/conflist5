@@ -199,14 +199,16 @@ know</a>!</p>
 <h2>Source Code</h2>
 <div>
 <p>
-This list application was built with the <a
-href="http://cakephp.org/">CakePHP</a> framework.  The source code is licensed
-under GPL v3, and is hosted in a git repository on GitHub: <a
-href="https://github.com/nilesjohnson/conference-list" target="github">conference-list</a>.</p>
+This list application was built with the <a href="http://cakephp.org/">CakePHP</a> framework.
 
-<p>Want to contribute!?  <a
-href="https://github.com/nilesjohnson/conference-list"
+The source code is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="gpl">GPL v3</a>, and is hosted in a git repository on GitHub: <a href="https://github.com/sethjohnson1/conflist5" target="github">conference-list</a>.
+</p>
+
+
+<p>Want to contribute!?
+<a href="https://github.com/sethjohnson1/conflist5"
 target="github">Browse the source</a>, have a look at the <a
-href="https://github.com/nilesjohnson/conference-list/issues"
+href="https://github.com/sethjohnson1/conflist5/issues"
 target="github">open issues</a>, and clone a working copy of the code.
-<a href="http://nilesjohnson.net/contact.html" target="blank">Contact Niles</a> if you have further questions!</p> </div>
+<a href="http://nilesjohnson.net/contact.html" target="blank">Contact Niles</a> if you have further questions!</p>
+</div>
