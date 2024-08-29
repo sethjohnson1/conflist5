@@ -181,16 +181,6 @@ else {
 <h1 style="float:left;"><?php echo $view_title; ?></h1>
 
 <div>
-  <div style="float:right;">
-<?php
-  if ($tagstring) {
-    echo $this->Html->link('ICS',array('controller'=>'Conferences','action'=>$tagstring.'.ics'));
-  }
-  else {
-    echo $this->Html->link('ICS',Configure::read('site.home').'/conferences/index.ics');
-  }
-?>
-  </div>
 
 <?php
   echo $this->Form->create(null);
