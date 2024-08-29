@@ -19,6 +19,8 @@ CHANGELOG
 Rewritten for the latest versions of PHP (version 8) and CakePHP (version 5).
 Functionally is generally the same, with a few improvements.
 
+- There is a search form for searching and filtering results by date of meeting, date of announcement, and other fields.
+
 - When adding an announcement, the Country selector now accepts any alternate spellings such as USA, UK, Deutschland, etc.  The full list is from the [countries data repository](https://github.com/mledoze/countries).
 
 - Announcements that have been added or updated in the last 30 days are marked with **[New]**.
