@@ -1,68 +1,100 @@
+DESCRIPTION
+-----------
+
+Conference List is a web application for community-maintained
+public lists (e.g. math conferences).  Its basic functions are:
+
+* A web form for adding new announcements, storing them in a database.
+* An interface for viewing announcements, sorted by date or location.
+* Interfaces to update and delete announcements.
+
+The application is based on the [Cake PHP framework](https://cakephp.org/) (version 5.x).
+
+
 CHANGELOG
 ---------
 
-### v. 3.0?? (MONTH YEAR) ###
+### v. 3.0 (September 2024) ###
 
-Rewritten for the latest versions of PHP and CakePHP.
+Rewritten for the latest versions of PHP (version 7) and CakePHP (version 5).
 Functionally is generally the same, with a few improvements.
 
 - When adding an announcement, the Country selector now accepts any alternate spellings such as USA, UK, Deutschland, etc.  The full list is from the [countries data repository](https://github.com/mledoze/countries).
 
-- Announcements that have been added or updated in the last 30 days are marked with [New].
+- Announcements that have been added or updated in the last 30 days are marked with **[New]**.
 
 - When adding an announcement, the Start/End Date fields are formatted by users' locale and the [date picker is controlled by  their browser](https://www.w3schools.com/TAGS/att_input_type_date.asp).
--------------
 
-# CakePHP Application Skeleton
+- New repository location at
+https://github.com/sethjohnson1/conflist5
 
-![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
-[![PHPStan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+### v. 2.2 (August 2023) ###
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 5.x.
+* New location option: 'Online'
+* New database fields 'created' and 'modified'
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+### v. 2.1.5 (July 2019) ###
 
-## Installation
+* Enable configuration for sending email through external servers
 
-1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+### v. 2.1.4 ###
 
-If Composer is installed globally, run
+* Rudimentary login for curators
 
-```bash
-composer create-project --prefer-dist cakephp/app
-```
+### v. 2.1.3 ###
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
+* ICS feed
+* Rudimentary search
 
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
+### v. 2.1.2 ###
 
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
+* SSL support
+* Google reCaptcha
 
-```bash
-bin/cake server -p 8765
-```
+### v. 2.1.1 ###
 
-Then visit `http://localhost:8765` to see the welcome page.
+* support json and xml views
 
-## Update
+### v. 2.1 ###
 
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
+* Now filter announcements by subject tags
 
-## Configuration
+* Set specific admin email addresses for individual tags
 
-Read and edit the environment specific `config/app_local.php` and set up the
-`'Datasources'` and any other configuration relevant for your application.
-Other environment agnostic settings can be changed in `config/app.php`.
+* Form for editing announcements is now the same as that for adding
+  new announcements
 
-## Layout
+* New 'view' page for each announcement, and announcement data in
+  confirmation emails
 
-The app skeleton uses [Milligram](https://milligram.io/) (v1.3) minimalist CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
+* Select boxes improved with select2 (jquery)
+
+* Links to sort by country or show past announcements have been
+  removed as these features are rarely used and are incompatible with
+  the subject tags.  If you would like to see these features
+  reimplemented, please let Niles know!
+
+
+
+
+
+ADMINISTRATION
+--------------
+
+Site administrators receive a copy of every confirmation email.  If
+this is lost or the edit keys there are invalid for some reason, you
+can get the edit/delete url for conference number `N` as follows:
+Navigate to `conferences/admin/N` and use the admin key from your
+private config file.  You can also use conference-specific edit key
+there.
+
+
+HISTORY
+-------
+
+This project began as `cakephp-conference-list` available at
+  * https://bitbucket.org/nilesjohnson/cakephp-conference-list/
+  * https://code.google.com/archive/p/cakephp-conference-list/
+Between 2014 and 2024 the project continued as `conference-list` at https://github.com/nilesjohnson/conference-list
+In mid 2024 the project was completely rewritten as `conflist5` at
+https://github.com/sethjohnson1/conflist5

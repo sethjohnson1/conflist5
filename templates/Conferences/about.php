@@ -114,14 +114,12 @@ You can use these, for instance, to set up an alternate front for the announemen
 A crude demo can be found <a href="https://nilesjohnson.net/mathmeetings-front.html">here</a>.
 Contact Niles if you are interested in additional features.</p>
 
-<!--
 <p>Here is a list of known alternative fronts.  Let us know if you maintain one that you would like added to the list!
 </p>
 <ul>
-  <li><a href="">Kiran Kedlaya's </a></li>
-  <li><a href=""></a></li>
+  <li><a href="https://mathweb.ucsd.edu/~kedlaya/cgi-bin/confs.cgi">Kiran Kedlaya's Conferences Arithmetic Geometry</a></li>
+  <li><a href="https://jbirnick.net/conferences/numbertheory/">Johann Birnick's Number Theory Conferences / Programs / Meetings</a></li>
 </ul>
--->
 </div>
 
 
