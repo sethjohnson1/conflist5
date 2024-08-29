@@ -16,7 +16,7 @@ CHANGELOG
 
 ### v. 3.0 (September 2024) ###
 
-Rewritten for the latest versions of PHP (version 7) and CakePHP (version 5).
+Rewritten for the latest versions of PHP (version 8) and CakePHP (version 5).
 Functionally is generally the same, with a few improvements.
 
 - When adding an announcement, the Country selector now accepts any alternate spellings such as USA, UK, Deutschland, etc.  The full list is from the [countries data repository](https://github.com/mledoze/countries).
