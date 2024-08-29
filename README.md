@@ -95,6 +95,8 @@ HISTORY
 This project began as `cakephp-conference-list` available at
   * https://bitbucket.org/nilesjohnson/cakephp-conference-list/
   * https://code.google.com/archive/p/cakephp-conference-list/
+
 Between 2014 and 2024 the project continued as `conference-list` at https://github.com/nilesjohnson/conference-list
+
 In mid 2024 the project was completely rewritten as `conflist5` at
 https://github.com/sethjohnson1/conflist5
