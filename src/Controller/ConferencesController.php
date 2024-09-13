@@ -351,6 +351,7 @@ class ConferencesController extends AppController
         $countries=$this->loadCountries();
         $this->set(compact('conference', 'tags','countries'));
         $this->set('edit',1);
+        $this->setFormTemplate();
         $this->render('add');
     }
 
