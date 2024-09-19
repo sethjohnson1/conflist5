@@ -69,7 +69,7 @@ class ConferencesTable extends Table
 
         $validator
             ->scalar('title')
-            ->maxLength('title', 200)
+            ->maxLength('title', 200,'Title cannot be greater than 200 characters')
             ->notEmptyString('title','Title is required');
 
         $validator

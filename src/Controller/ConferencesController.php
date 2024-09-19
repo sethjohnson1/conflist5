@@ -61,7 +61,12 @@ class ConferencesController extends AppController
             else $this->viewBuilder()->setLayout($this->request->getAttribute('params')['_ext'].'/default');
 
         }
-
+        //names of actions requiring custom template. placing here prevents validation errors
+        $needs_form_template=['add','edit'];
+        if (\in_array($this->request->getParam('action'),$needs_form_template)){
+            $form_wrapper=$this->setFormTemplate();
+            $this->set(compact('form_wrapper'));
+        }
     }
     /**
      * Index method
@@ -187,6 +192,7 @@ class ConferencesController extends AppController
         }
 
         // variables for both list and search view
+
         $this->set(compact('view_title',
                            'conferences',
                            'tags',
@@ -194,7 +200,7 @@ class ConferencesController extends AppController
                            'tag_dropdown',
                            'showEdit',
         ));
-        $this->setFormTemplate();
+        
         return $this->render('index');
     }
 
@@ -288,10 +294,12 @@ class ConferencesController extends AppController
     public function add(){
         $conference = $this->Conferences->newEmptyEntity();
         $countries=$this->loadCountries();
-        $error='Unspecified error has occurred';
+        $time_error='Unspecified error has occurred';
         //debug($countries);
         if ($this->request->is('post')) {
-            //debug($this->request->getData());
+            //patchEntity right away so we can check hasErrors()
+            $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
+            
             //HONEYPOT check
             if (isset($this->request->getData()['contact_password']) && !empty($this->request->getData()['contact_password'])){
                 // adds entry in logs/debug.log, with 'info' prefix
@@ -309,22 +317,32 @@ class ConferencesController extends AppController
             try{
                 $sd=new DateTime($this->request->getData()['start_date']);
                 $ed=new DateTime($this->request->getData()['end_date']);
-                if ($sd>$ed) $error='Start date cannot be after end date.';
-                else $error=false;
+                if ($sd>$ed) $time_error='Start date cannot be after end date.';
+                else $time_error=false;
             }
             catch (Exception $e){
-                $error='Dates could not be parsed. Please contact us if you continue to receive this error.';
+                $time_error='Dates could not be parsed. Please contact us if you continue to receive this error.';
             }
 
-            if (!$error){
-                $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
+            if (!$time_error && !$conference->hasErrors()){
+                //$conference = $this->Conferences->patchEntity($conference, $this->request->getData());
+                
                 return $this->saveAndSend($conference);
             }
-            else $this->Flash->error(__($error)); //added ELSE here, was firing maybe bc redirect is in another function?
+            else{
+                //display all errors
+                if ($time_error) $this->Flash->error(__($time_error));
+                if ($conference->hasErrors()){
+                    foreach ($conference->getErrors() as $cerr){
+                        $this->Flash->error(__('Validation failed. Please check your entries and try again.'));
+                        //$cerr is a validatorName=>error message, so loop here too
+                        //foreach ($cerr as $validator_rule=>$errmessage) $this->Flash->error(__($errmessage));
+                    }
+                }
+            } 
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
         $this->set(compact('conference', 'tags','countries'));
-        $this->setFormTemplate();
     }
 
     /**
@@ -351,7 +369,6 @@ class ConferencesController extends AppController
         $countries=$this->loadCountries();
         $this->set(compact('conference', 'tags','countries'));
         $this->set('edit',1);
-        $this->setFormTemplate();
         $this->render('add');
     }
 
@@ -577,7 +594,8 @@ class ConferencesController extends AppController
         $form_wrapper = [
             'inputContainer' => '<div class="input {{type}}{{required}}">{{content}}<span class="after-text">{{after}}</span></div>',
         ];
-        $this->set(compact('form_wrapper'));
+        return $form_wrapper;
+        //$this->set(compact('form_wrapper'));
     }
 
 } // close class

@@ -7,7 +7,8 @@ $addedit='Edit';
 echo '<h1>'.$addedit.' Meeting Information</h1>';
 
 echo $this->Form->create($conference);
-$this->Form->setTemplates($form_wrapper);
+//fatal error if $form_wrapper is null!
+if (null!==$form_wrapper) $this->Form->setTemplates($form_wrapper);
 echo $this->Form->submit('Submit');
 echo "<br />";
 if (isset($edit)){
