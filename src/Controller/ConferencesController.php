@@ -558,12 +558,12 @@ class ConferencesController extends AppController
             $mailer->setTo($testEmail);
             //$mailer->setCc($testEmail); // clear previously set cc
             //$mailer->setBcc($testEmail); // clear previously set bcc
-            // debug($conference);
-            // debug($mailer);
+            debug($conference);
+            debug($mailer);
             if ($mailer->deliver()) {
                 $this->Flash->success(__('email sent to '.$testEmail));
             }
-            return $this->render('view');
+            //return $this->render('view');
         }
         else {
             throw new NotFoundException(__('Invalid conference'));
