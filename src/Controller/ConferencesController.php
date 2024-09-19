@@ -558,9 +558,9 @@ class ConferencesController extends AppController
     public function testEmailSend($id) {
         // a hack to test sending of emails
         // visit url with id number
-        // should send email filled with info from that conference id
-        // to address is rest to site.test_email address
-        // uncomment lines below to also reset cc and bcc lines
+        // should send email filled with info from that conference id;
+        // fields To, Cc, Bcc are reset to site.test_email address
+        // comment lines below to also reset cc and bcc lines
         //
         // protected from public by curator cookie
         $cookie = $this->request->getCookie('curator_cookie');
@@ -573,8 +573,8 @@ class ConferencesController extends AppController
             //reset to for testing
             $testEmail = Configure::read('site.test_email');
             $mailer->setTo($testEmail);
-            //$mailer->setCc($testEmail); // clear previously set cc
-            //$mailer->setBcc($testEmail); // clear previously set bcc
+            $mailer->setCc($testEmail); // clear previously set cc
+            $mailer->setBcc($testEmail); // clear previously set bcc
             // debug($conference);
             // debug($mailer);
             if ($mailer->deliver()) {
