@@ -7,6 +7,7 @@ use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Core\Configure;
 
 /**
  * Conferences Model
@@ -122,7 +123,12 @@ class ConferencesTable extends Table
             ->notEmptyString('contact_email',$email_validation_error)
             ->maxLength('contact_email', 100)
             //2nd param verifies host exists, seems to work for oddball TLDs and ones with no website (checks MX DNS?)
-            ->email('contact_email',true,$email_validation_error);
+            //->email('contact_email',true,$email_validation_error);
+            ->add('contact_email', 'validEmails', [
+                'rule' => 'multiEmail',
+                'message' => __('One or more email addresses appear invalid.'),
+                'provider' => 'table',
+            ]);
 
         $validator
             ->scalar('description')
@@ -149,5 +155,19 @@ class ConferencesTable extends Table
         //no special handling for dates debug($entity) and you can see they are already Cake date objects
         return;
 
+    }
+
+    public function multiEmail($check, array $context): bool {
+        $max_emails=Configure::read('maxEmailsPerSave');
+        $email_list = \explode(',',$check);
+       // debug($email_list);
+        $V = new \Cake\Validation\Validation;
+        $counter=0;
+        foreach ($email_list as $email) {
+            if (!$V->email(trim($email))) return false;
+            $counter++;
+            if ($counter>$max_emails) return false;
+        }
+        return true;
     }
 }

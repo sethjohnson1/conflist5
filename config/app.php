@@ -7,6 +7,8 @@ use Cake\Log\Engine\FileLog;
 use Cake\Mailer\Transport\MailTransport;
 
 return [
+
+    'maxEmailsPerSave'=>5, //sj - how many emails per Conference
     /*
      * Debug Level:
      *

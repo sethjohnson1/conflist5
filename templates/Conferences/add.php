@@ -1,4 +1,6 @@
 <?php
+use Cake\Core\Configure;
+$max_emails=Configure::read('maxEmailsPerSave');
 if (isset($edit)){
 echo '<div class="conferences form">';
 $addedit='Edit';
@@ -50,7 +52,7 @@ echo $this->Form->control('contact_name', [
     'label'=>'Contact Name(s), comma separated'
 ]);
 echo $this->Form->control('contact_email', [
-    'label'=>'Contact Email(s), comma separated',
+    'label'=>"Contact Email(s), comma separated (up to {$max_emails} )",
     'templateVars'=>['after'=>'Never displayed publicly. Confirmation and edit/delete codes will be sent to these addresses.'],
 ]);
 echo $this->Form->control('contact_password', [
