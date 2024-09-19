@@ -62,7 +62,7 @@ class ConferencesController extends AppController
 
         }
         //names of actions requiring custom template. placing here prevents validation errors
-        $needs_form_template=['add','edit'];
+        $needs_form_template=['add','edit','search'];
         if (\in_array($this->request->getParam('action'),$needs_form_template)){
             $form_wrapper=$this->setFormTemplate();
             $this->set(compact('form_wrapper'));
@@ -200,7 +200,7 @@ class ConferencesController extends AppController
                            'tag_dropdown',
                            'showEdit',
         ));
-        
+
         return $this->render('index');
     }
 
@@ -299,7 +299,7 @@ class ConferencesController extends AppController
         if ($this->request->is('post')) {
             //patchEntity right away so we can check hasErrors()
             $conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-            
+
             //HONEYPOT check
             if (isset($this->request->getData()['contact_password']) && !empty($this->request->getData()['contact_password'])){
                 // adds entry in logs/debug.log, with 'info' prefix
@@ -326,7 +326,7 @@ class ConferencesController extends AppController
 
             if (!$time_error && !$conference->hasErrors()){
                 //$conference = $this->Conferences->patchEntity($conference, $this->request->getData());
-                
+
                 return $this->saveAndSend($conference);
             }
             else{
@@ -339,7 +339,7 @@ class ConferencesController extends AppController
                         //foreach ($cerr as $validator_rule=>$errmessage) $this->Flash->error(__($errmessage));
                     }
                 }
-            } 
+            }
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
         $this->set(compact('conference', 'tags','countries'));
