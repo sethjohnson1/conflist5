@@ -576,6 +576,7 @@ class ConferencesController extends AppController
             $mailer->setCc($testEmail); // clear previously set cc
             $mailer->setBcc($testEmail); // clear previously set bcc
             // debug($conference);
+            // debug($testEmail);
             // debug($mailer);
             if ($mailer->deliver()) {
                 $this->Flash->success(__('email sent to '.$testEmail));
