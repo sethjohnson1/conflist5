@@ -163,7 +163,7 @@ class ConferencesController extends AppController
 
         // debug($query);
 
-        $conferences = $this->paginate($query);
+        $conferences = $this->paginate($query,['limit'=>100]);
         // debug($conferences);
         $qtags=$this->Conferences->Tags->find('all');
         $tags = $qtags->toArray();
