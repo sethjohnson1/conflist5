@@ -579,6 +579,7 @@ class ConferencesController extends AppController
             // debug($testEmail);
             // debug($mailer);
             if ($mailer->deliver()) {
+                if (\is_array($testEmail)) $testEmail=implode(', ',$testEmail);
                 $this->Flash->success(__('email sent to '.$testEmail));
             }
             return $this->render('view');
