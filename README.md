@@ -36,6 +36,8 @@ Functionally is generally the same, with a few improvements.
 
 - When adding an announcement, the Start/End Date fields are formatted by users' locale and the [date picker is controlled by  their browser](https://www.w3schools.com/TAGS/att_input_type_date.asp).
 
+- RSS feed deprecated.  CakePHP dropped support for RSS in version 5, and we don't think this was used much.  Get in touch if it impacts you!
+
 - New repository location at
 https://github.com/sethjohnson1/conflist5
 
