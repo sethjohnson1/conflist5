@@ -92,7 +92,7 @@ else {
 <h2 style="margin: 0 0 1ex 0;">Choose a sublist of interest</h2>
 <dl style="width:40ex;">
 <dt><?php echo $this->Html->link(
-  'Arithmetic Geometry', array('controller'=>'Conferences','action'=>'ag-nt'));?>
+  'Arithmetic Geometry', array('controller'=>'Conferences','ag-nt'));?>
 </dt>
 <dd>
   <span class="tag">ag.algebraic-geometry</span>
@@ -100,7 +100,7 @@ else {
 </dd>
 <!--
 <dt><?php echo $this->Html->link(
-  'Commutative Algebra', array('controller'=>'Conferences','action'=>'ac-ag'));?>
+  'Commutative Algebra', array('controller'=>'Conferences','ac-ag'));?>
 </dt>
 <dd>
   <span class="tag">ac.commutative-algebra</span>
@@ -108,7 +108,7 @@ else {
 </dd>
 -->
 <dt><?php echo $this->Html->link(
-  'Topology', array('controller'=>'Conferences','action'=>'at-gt'));?>
+  'Topology', array('controller'=>'Conferences','at-gt'));?>
 </dt>
 <dd>
   <span class="tag">at.algebraic-topology</span>
@@ -116,7 +116,7 @@ else {
 </dd>
 <!--
 <dt><?php echo $this->Html->link(
-  'All', array('controller'=>'Conferences','action'=>''));?>
+  'All', array('controller'=>'Conferences',));?>
 </dt>
 <dd>
   <span style="font-size:90%;">View all announcements.</span>
@@ -151,8 +151,7 @@ else {
   <ul>
     <li>Secure connections (https) now activated and all traffic is automatically redirected to use https.  Thanks to <a href='https://letsencrypt.org/' target='le'>Let's Encrypt</a> for providing the certificate!</li>
     <li>Spam protection now provided by Google <a href="https://www.google.com/recaptcha" target='gr'>reCaptcha</a>.</li>
-    <li>New <?php echo $this->Html->link(
-  'json and xml interfaces', array('action'=>'about#xml_json_about'));?> for access by other software.</li>
+    <li>New <?php //echo $this->Html->link('json and xml interfaces', array('action'=>'about').'#xml_json_about');?> for access by other software.</li>
   </ul>
   <h4>Updates 2016-01</h4>
   <ul>
@@ -297,7 +296,7 @@ echo '<h3 class="'.$titleClass.'">';
 echo ' ';
 echo
   $this->Html->link('iCalendar .ics',
-  array('action'=>'view/'.$conference['id'].'.ics'),
+  array('action'=>'view',$conference['id'],'_ext'=>'ics'),
   array('escape' => false,'class'=>'ics button'));
 ?>
 </div>

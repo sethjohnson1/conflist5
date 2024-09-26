@@ -578,6 +578,14 @@ class ConferencesController extends AppController
             // debug($conference);
             // debug($testEmail);
             // debug($mailer);
+
+            try{
+                $mailer->deliver();
+            }
+            catch (Exception $e){
+                debug($e);
+            }
+
             if ($mailer->deliver()) {
                 if (\is_array($testEmail)) $testEmail=implode(', ',$testEmail);
                 $this->Flash->success(__('email sent to '.$testEmail));
