@@ -579,6 +579,7 @@ class ConferencesController extends AppController
             // debug($testEmail);
             // debug($mailer);
 
+            //NOTE: this doesn't do much because the SocketException is caught in the framework before this
             try{
                 $mailer->deliver();
             }
