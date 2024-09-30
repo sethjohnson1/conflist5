@@ -6,6 +6,7 @@ use Cake\Controller\Controller\ModelAwareTrait;
 use Cake\View\JsonView;
 use Cake\View\XmlView;
 use Cake\View\View;
+use Cake\View\UrlHelper;
 use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
 use DateTime;
@@ -51,6 +52,9 @@ class ConferencesController extends AppController
         parent::beforeRender($event);
         $this->viewBuilder()->addHelper('Gcal');
         $this->viewBuilder()->addHelper('Ical');
+        $this->viewBuilder()->addHelper('Rss');
+
+        
         $serialized=['json','xml'];
         $rss_actions=['index'];
         if (!empty($this->request->getAttribute('params')['_ext'])){
@@ -59,9 +63,11 @@ class ConferencesController extends AppController
                 $this->viewBuilder()->setLayout('ajax');
              }
              elseif ($this->request->getAttribute('params')['_ext']==='rss' && \in_array($this->request->getAttribute('params')['action'],$rss_actions)){
+                    $this->response = $this->response->withType('application/xml');
                     $this->viewBuilder()->setLayout('rss/default');
              }
              elseif ($this->request->getAttribute('params')['_ext']==='ics'){
+                $this->response = $this->response->withType('text/calendar');
                 $this->viewBuilder()->setLayout('ics/default');
              }
              else throw new NotFoundException();
@@ -212,7 +218,7 @@ class ConferencesController extends AppController
         }
 
         // variables for both list and search view
-
+        
         $this->set(compact('view_title',
                            'conferences',
                            'tags',

@@ -10,7 +10,10 @@ if (!isset($channelData['title'])) {
 }
 //echo $this->fetch('content');
 extract($channelData['atom:link']['attrib']);
-?><rss xmlns:atom="http://www.w3.org/2005/Atom">
+$header='<?xml version="1.0"?>';
+?>
+<?=$header?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title><?=$channelData['title']?></title>
         <link><?=$channelData['link']?></link>
