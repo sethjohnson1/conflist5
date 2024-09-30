@@ -142,6 +142,13 @@ else {
     <?php echo $this->Html->link('New Announcement', array('action' => 'add',$tagstring), array('class' => 'button', 'id' => 'add-button'));?>
     </p>
   </div>
+  <h4>Updates 2024-09</h4>
+  <ul>
+    <li>Rewritten for the latest versions of PHP (8.x) and CakePHP (5.x)</li>
+    <li><span style="font-weight:bold">[NEW]</span> marker for announcements added or updated in the last 30 days</li>
+    <li>RSS feeds deprecated (see <a href="https://github.com/sethjohnson1/conflist5/issues/30">issue #30</a>)</li>
+    <li><a href="/conferences/search">Search form</a> for filtering by date of meeting, date of announcement, and other fields</li>
+  </ul>
 <!--
   <h4>Updates 2019-07</h4>
   <ul>
@@ -171,7 +178,7 @@ else {
   properly, please let Niles know.</p>
 -->
 
-  <p>Additional update notes are available in the <a href="https://github.com/sethjohnson1/conflist5" target="github">git repository</a> (GitHub).</p>
+  <p>See the new <a href="https://github.com/sethjohnson1/conflist5" target="github">git repository</a> (GitHub) with additional update notes.</p>
 
 </div>
 
