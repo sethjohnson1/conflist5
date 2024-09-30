@@ -130,7 +130,7 @@ class ConferencesController extends AppController
                 else {
                     $conditions[$field.' LIKE'] = '%'.$value.'%';
                 }
-		debug($conditions);
+		//debug($conditions);
             }
         }
         // variables for search view only
@@ -162,7 +162,7 @@ class ConferencesController extends AppController
             })->distinct(['Conferences.id']);
         }
 
-        debug($query);
+        //debug($query);
 
         $conferences = $this->paginate($query);
         // debug($conferences);
