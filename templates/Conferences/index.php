@@ -146,7 +146,6 @@ else {
   <ul>
     <li>Rewritten for the latest versions of PHP (8.2) and CakePHP (5.x)</li>
     <li><span class="modinfo" style="font-size: 100%; font-style: italic; color:green; font-weight:bold">[New]</span> label for announcements added or updated in the last 30 days</li>
-    <li>RSS feeds deprecated (see <a href="https://github.com/sethjohnson1/conflist5/issues/30">issue #30</a>)</li>
     <li><a href="/conferences/search">Search form</a> for filtering by date of meeting, date of announcement, and other fields</li>
   </ul>
 <!--
@@ -187,6 +186,17 @@ else {
 <h1 style="float:left;"><?php echo $view_title; ?></h1>
 
 <div>
+  <div style="float:right;">
+<?php
+  if ($tagstring) {
+	echo $this->Html->link('RSS',array('controller'=>'Conferences','action'=>$tagstring.'.rss'));
+  }
+  else {
+    echo $this->Html->link('RSS',Configure::read('site.home').'/conferences/index.rss');
+  }
+?>
+  </div>
+
 
 <?php
   echo $this->Form->create(null);
