@@ -61,6 +61,9 @@ class ConferencesController extends AppController
              elseif ($this->request->getAttribute('params')['_ext']==='rss' && \in_array($this->request->getAttribute('params')['action'],$rss_actions)){
                     $this->viewBuilder()->setLayout('rss/default');
              }
+             elseif ($this->request->getAttribute('params')['_ext']==='ics'){
+                $this->viewBuilder()->setLayout('ics/default');
+             }
              else throw new NotFoundException();
 
 
