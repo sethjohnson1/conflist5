@@ -188,12 +188,8 @@ else {
 <div>
   <div style="float:right;">
 <?php
-  if ($tagstring) {
-	echo $this->Html->link('RSS',array('controller'=>'Conferences','action'=>$tagstring.'.rss'));
-  }
-  else {
-    echo $this->Html->link('RSS',Configure::read('site.home').'/conferences/index.rss');
-  }
+  $tagstr=(\is_array($tagarray))?\implode('-',$tagarray):$tagarray;
+  echo $this->Html->link('RSS',['controller'=>'Conferences','action'=>'index',$tagstr,'_ext'=>'rss'],['fullBase'=>true]);
 ?>
   </div>
 
