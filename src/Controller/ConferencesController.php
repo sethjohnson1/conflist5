@@ -130,6 +130,7 @@ class ConferencesController extends AppController
                 else {
                     $conditions[$field.' LIKE'] = '%'.$value.'%';
                 }
+		debug($conditions);
             }
         }
         // variables for search view only
@@ -161,7 +162,7 @@ class ConferencesController extends AppController
             })->distinct(['Conferences.id']);
         }
 
-        // debug($query);
+        debug($query);
 
         $conferences = $this->paginate($query);
         // debug($conferences);
@@ -234,7 +235,9 @@ class ConferencesController extends AppController
             'institution',
             'meeting_type',
             'after',
-            'before'
+	    'before',
+	    'mod_before',
+	    'mod_after',
 
         ];
     }
