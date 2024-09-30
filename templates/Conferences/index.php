@@ -144,7 +144,7 @@ else {
   </div>
   <h4>Updates 2024-09</h4>
   <ul>
-    <li>Rewritten for the latest version of CakePHP (5.x)</li>
+      <li>Rewritten for the latest versions of PHP (8.2) and CakePHP (5.x)</li>
     <li><span class="modinfo" style="font-size: 100%; font-style: italic; color:green; font-weight:bold">[New]</span> label for announcements added or updated in the last 30 days</li>
     <li>RSS feeds deprecated (see <a href="https://github.com/sethjohnson1/conflist5/issues/30">issue #30</a>)</li>
     <li><a href="/conferences/search">Search form</a> for filtering by date of meeting, date of announcement, and other fields</li>
