@@ -186,7 +186,7 @@ else {
 <h1 style="float:left;"><?php echo $view_title; ?></h1>
 
 <div>
-  <div style="float:right;">
+  <div style="float:right;padding-top:.2pc">
 <?php
   $tagstr=(\is_array($tagarray))?\implode('-',$tagarray):$tagarray;
   echo $this->Html->link('RSS',['controller'=>'Conferences','action'=>'index',$tagstr,'_ext'=>'rss'],['fullBase'=>true]);
