@@ -176,7 +176,9 @@ return [
         'skipLog' => [],
         'log' => true,
         'trace' => true,
-        'ignoredDeprecationPaths' => [],
+        'ignoredDeprecationPaths' => [
+            'vendor/cakephp/cakephp/src/I18n/I18n.php',
+        ],
     ],
 
     /*

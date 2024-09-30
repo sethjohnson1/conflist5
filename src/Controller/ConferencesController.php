@@ -52,13 +52,20 @@ class ConferencesController extends AppController
         $this->viewBuilder()->addHelper('Gcal');
         $this->viewBuilder()->addHelper('Ical');
         $serialized=['json','xml'];
-        if (null!==$this->request->getAttribute('params')['_ext']){
+        $rss_actions=['index'];
+        if (!empty($this->request->getAttribute('params')['_ext'])){
             if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)){
                 $this->addViewClasses([JsonView::class, XmlView::class]);
                 $this->viewBuilder()->setLayout('ajax');
              }
-            //assumes you have ext/view.php (i.e. ics/view.php)
-            else $this->viewBuilder()->setLayout($this->request->getAttribute('params')['_ext'].'/default');
+             elseif ($this->request->getAttribute('params')['_ext']==='rss' && \in_array($this->request->getAttribute('params')['action'],$rss_actions)){
+                    $this->viewBuilder()->setLayout('rss/default');
+             }
+             elseif ($this->request->getAttribute('params')['_ext']==='ics'){
+                $this->viewBuilder()->setLayout('ics/default');
+             }
+             else throw new NotFoundException();
+
 
         }
         //names of actions requiring custom template. placing here prevents validation errors
@@ -74,10 +81,15 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index($tagstring=null){
+        //prevent these values getting passed as the tagarray
+        $skip_tags=[
+            'conferences',
+            'index'
+        ];
         $view_title='Upcoming Meetings';
         // conditions for default list view
         $conditions = ['end_date > '=>date('Y-m-d', strtotime("-1 week"))];
-        if ($tagstring != null) {
+        if ($tagstring !== null && !\in_array($tagstring,$skip_tags)) {
             $tagarray = explode('-',$tagstring);
         }
         else {
@@ -130,6 +142,7 @@ class ConferencesController extends AppController
                 else {
                     $conditions[$field.' LIKE'] = '%'.$value.'%';
                 }
+		//debug($conditions);
             }
         }
         // variables for search view only
@@ -143,35 +156,42 @@ class ConferencesController extends AppController
           process query for either list or search views
           $tagarray should be null or an array of short tag names (ac, ag, at, etc.)
         */
-
+        $qtags=$this->Conferences->Tags->find('all');
+        $tags = $qtags->toArray();
+        $tag_dropdown=[];
+        $valid_tag_checker=[];
+        foreach ($tags as $tag) {
+            $key=$this->tag_shortname($tag->name);
+            if ($key) $tag_dropdown[$key]=$tag->name;
+            $valid_tag_checker[]=$key;
+        }
         $query = $this->Conferences->find()
             ->contain('Tags')
             ->where($conditions)
             ->order(['start_date ASC'])
             ->select($this->publicFields());
 
-        // process optional tagarray
         if ($tagarray!==null){
+            $found_valid=false;//sj - if not at least one valid tag throw a NotFound
             $where=[];
             //make a "where" array
-            foreach ($tagarray as $stag) $where[]=['Tags.name LIKE'=>"{$stag}.%"];
+            foreach ($tagarray as $stag){
+               $where[]=['Tags.name LIKE'=>"{$stag}.%"];
+               if (\in_array($stag,$valid_tag_checker)) $found_valid=true;
+            }
+            if (!$found_valid) throw new NotFoundException();
             //add the Tag match to the existing $query
             $query->matching('Tags',function (\Cake\ORM\Query $q) use($where){
                 return $q->where(['OR'=>$where]);
             })->distinct(['Conferences.id']);
         }
 
-        // debug($query);
+        //debug($query);
 
         $conferences = $this->paginate($query,['limit'=>100]);
         // debug($conferences);
-        $qtags=$this->Conferences->Tags->find('all');
-        $tags = $qtags->toArray();
-        $tag_dropdown=[];
-        foreach ($tags as $tag) {
-            $key=$this->tag_shortname($tag->name);
-            if ($key) $tag_dropdown[$key]=$tag->name;
-        }
+
+
         //debug($conferences);
 
         if(null!==$this->request->getAttribute('params')['_ext']) {
@@ -200,7 +220,7 @@ class ConferencesController extends AppController
                            'tag_dropdown',
                            'showEdit',
         ));
-
+        if ($this->request->getAttribute('params')['_ext']==='rss') return $this->render('rss/index');
         return $this->render('index');
     }
 
@@ -234,7 +254,9 @@ class ConferencesController extends AppController
             'institution',
             'meeting_type',
             'after',
-            'before'
+	    'before',
+	    'mod_before',
+	    'mod_after',
 
         ];
     }
@@ -578,6 +600,15 @@ class ConferencesController extends AppController
             // debug($conference);
             // debug($testEmail);
             // debug($mailer);
+
+            //NOTE: this doesn't do much because the SocketException is caught in the framework before this
+            try{
+                $mailer->deliver();
+            }
+            catch (Exception $e){
+                debug($e);
+            }
+
             if ($mailer->deliver()) {
                 if (\is_array($testEmail)) $testEmail=implode(', ',$testEmail);
                 $this->Flash->success(__('email sent to '.$testEmail));

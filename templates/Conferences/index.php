@@ -92,7 +92,7 @@ else {
 <h2 style="margin: 0 0 1ex 0;">Choose a sublist of interest</h2>
 <dl style="width:40ex;">
 <dt><?php echo $this->Html->link(
-  'Arithmetic Geometry', array('controller'=>'Conferences','action'=>'ag-nt'));?>
+  'Arithmetic Geometry', array('controller'=>'Conferences','ag-nt'));?>
 </dt>
 <dd>
   <span class="tag">ag.algebraic-geometry</span>
@@ -100,7 +100,7 @@ else {
 </dd>
 <!--
 <dt><?php echo $this->Html->link(
-  'Commutative Algebra', array('controller'=>'Conferences','action'=>'ac-ag'));?>
+  'Commutative Algebra', array('controller'=>'Conferences','ac-ag'));?>
 </dt>
 <dd>
   <span class="tag">ac.commutative-algebra</span>
@@ -108,7 +108,7 @@ else {
 </dd>
 -->
 <dt><?php echo $this->Html->link(
-  'Topology', array('controller'=>'Conferences','action'=>'at-gt'));?>
+  'Topology', array('controller'=>'Conferences','at-gt'));?>
 </dt>
 <dd>
   <span class="tag">at.algebraic-topology</span>
@@ -116,7 +116,7 @@ else {
 </dd>
 <!--
 <dt><?php echo $this->Html->link(
-  'All', array('controller'=>'Conferences','action'=>''));?>
+  'All', array('controller'=>'Conferences',));?>
 </dt>
 <dd>
   <span style="font-size:90%;">View all announcements.</span>
@@ -142,6 +142,12 @@ else {
     <?php echo $this->Html->link('New Announcement', array('action' => 'add',$tagstring), array('class' => 'button', 'id' => 'add-button'));?>
     </p>
   </div>
+  <h4>Updates 2024-09</h4>
+  <ul>
+    <li>Rewritten for the latest versions of PHP (8.2) and CakePHP (5.x)</li>
+    <li><span class="modinfo" style="font-size: 100%; font-style: italic; color:green; font-weight:bold">[New]</span> label for announcements added or updated in the last 30 days</li>
+    <li><a href="/conferences/search">Search form</a> for filtering by date of meeting, date of announcement, and other fields</li>
+  </ul>
 <!--
   <h4>Updates 2019-07</h4>
   <ul>
@@ -151,8 +157,7 @@ else {
   <ul>
     <li>Secure connections (https) now activated and all traffic is automatically redirected to use https.  Thanks to <a href='https://letsencrypt.org/' target='le'>Let's Encrypt</a> for providing the certificate!</li>
     <li>Spam protection now provided by Google <a href="https://www.google.com/recaptcha" target='gr'>reCaptcha</a>.</li>
-    <li>New <?php echo $this->Html->link(
-  'json and xml interfaces', array('action'=>'about#xml_json_about'));?> for access by other software.</li>
+    <li>New <?php //echo $this->Html->link('json and xml interfaces', array('action'=>'about').'#xml_json_about');?> for access by other software.</li>
   </ul>
   <h4>Updates 2016-01</h4>
   <ul>
@@ -172,7 +177,7 @@ else {
   properly, please let Niles know.</p>
 -->
 
-  <p>Additional update notes are available in the <a href="https://github.com/sethjohnson1/conflist5" target="github">git repository</a> (GitHub).</p>
+  <p>See the new <a href="https://github.com/sethjohnson1/conflist5" target="github">git repository</a> (GitHub) with additional update notes.</p>
 
 </div>
 
@@ -181,6 +186,13 @@ else {
 <h1 style="float:left;"><?php echo $view_title; ?></h1>
 
 <div>
+  <div style="float:right;padding-top:.2pc">
+<?php
+  $tagstr=(\is_array($tagarray))?\implode('-',$tagarray):$tagarray;
+  echo $this->Html->link('RSS',['controller'=>'Conferences','action'=>'index',$tagstr,'_ext'=>'rss'],['fullBase'=>true]);
+?>
+  </div>
+
 
 <?php
   echo $this->Form->create(null);
@@ -297,7 +309,7 @@ echo '<h3 class="'.$titleClass.'">';
 echo ' ';
 echo
   $this->Html->link('iCalendar .ics',
-  array('action'=>'view/'.$conference['id'].'.ics'),
+  array('action'=>'view',$conference['id'],'_ext'=>'ics'),
   array('escape' => false,'class'=>'ics button'));
 ?>
 </div>
