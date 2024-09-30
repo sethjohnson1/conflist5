@@ -5,6 +5,7 @@
 /logs/*
 /tmp/*
 /vendor/*
+composer.lock
 
 # OS generated files #
 ######################
