@@ -114,19 +114,11 @@ class ConferencesController extends AppController
         $tagarray = null; //default
         $view_title='Search Announcements';
         $new_query=[];
-        //debug($_GET);
-        // defaults
-        $searchVars['after'] = new DateTime('-1 week');
         //if POST then build a search query and redirect
         if ($this->request->is(['post'])) {
-
             foreach ($this->request->getData() as $field=>$value){
-                if ($field==='after' && empty($value)){
-
-                   unset($searchVars['after']);
-                } 
-                
-                if (!\in_array($field,$this->allowedSearchParams()) || empty($value)) continue;
+                if (!\in_array($field,$this->allowedSearchParams())) continue;
+                if (empty($value) && $field!=='after') continue; //let after be empty
                 $new_query[$field]=$value;
             }
             return $this->redirect(['action' => 'search','?'=>$new_query]);
@@ -134,9 +126,13 @@ class ConferencesController extends AppController
 
         // debug($this->request->getQuery());
 
+        // defaults
+        if (!isset($this->request->getQuery()['after'])){
+            $searchVars['after'] = new DateTime('-1 week');
+            $conditions = array('start_date >' => $searchVars['after']);  
+        }
         
 
-        if (isset($searchVars['after'])) $conditions = array('start_date >' => $searchVars['after']);
         // process querystring from url
         foreach ($this->request->getQuery() as $field => $value) {
             if (!\in_array($field,$this->allowedSearchParams())) continue;
@@ -165,7 +161,6 @@ class ConferencesController extends AppController
             }
         }
         // variables for search view only
-        //debug($searchVars);
         $this->set(compact('searchVars',));
 
         return $this->renderList($view_title,$conditions,$tagarray);
