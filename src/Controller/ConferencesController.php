@@ -301,7 +301,7 @@ class ConferencesController extends AppController
         return $t['Tag']['name'];
     }
     function tag_id_from_name($tagname) {
-        $t = $this->Conferences->Tags->find('all',['conditions'=>['Tags.name LIKE'=>$tagname.'.%']]);
+        $t = $this->Conferences->Tags->find('all')->where(['Tags.name LIKE'=>$tagname.'.%']);
         $row=$t->first();
         return $row->id;
     }
