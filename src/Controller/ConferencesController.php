@@ -131,6 +131,7 @@ class ConferencesController extends AppController
             $searchVars['after'] = new DateTime('-1 week');
             $conditions = array('start_date >' => $searchVars['after']);  
         }
+        else $conditions=[];
         
 
         // process querystring from url
