@@ -52,11 +52,14 @@ class ConferencesController extends AppController
         parent::beforeRender($event);
         $this->viewBuilder()->addHelper('Gcal');
         $this->viewBuilder()->addHelper('Ical');
-        $this->viewBuilder()->addHelper('Rss');
+        //$this->viewBuilder()->addHelper('Rss');
+        $this->viewBuilder()->addHelper('Url', [
+            'className' => 'Urloverride'
+        ]);
 
         
         $serialized=['json','xml'];
-        $rss_actions=['index'];
+        $rss_actions=['index','search'];
         if (!empty($this->request->getAttribute('params')['_ext'])){
             if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)){
                 $this->addViewClasses([JsonView::class, XmlView::class]);
@@ -90,7 +93,8 @@ class ConferencesController extends AppController
         //prevent these values getting passed as the tagarray
         $skip_tags=[
             'conferences',
-            'index'
+            'index',
+            'curatorCookie',
         ];
         $view_title='Upcoming Meetings';
         // conditions for default list view
@@ -101,6 +105,7 @@ class ConferencesController extends AppController
         else {
             $tagarray = null;
         }
+
         return $this->renderList($view_title,$conditions,$tagarray);
     }
 
@@ -109,9 +114,18 @@ class ConferencesController extends AppController
         $tagarray = null; //default
         $view_title='Search Announcements';
         $new_query=[];
+        //debug($_GET);
+        // defaults
+        $searchVars['after'] = new DateTime('-1 week');
         //if POST then build a search query and redirect
         if ($this->request->is(['post'])) {
+
             foreach ($this->request->getData() as $field=>$value){
+                if ($field==='after' && empty($value)){
+
+                   unset($searchVars['after']);
+                } 
+                
                 if (!\in_array($field,$this->allowedSearchParams()) || empty($value)) continue;
                 $new_query[$field]=$value;
             }
@@ -120,10 +134,9 @@ class ConferencesController extends AppController
 
         // debug($this->request->getQuery());
 
-        // defaults
-        $searchVars['after'] = new DateTime('-1 week');
-        $conditions = array('start_date >' => $searchVars['after']);
+        
 
+        if (isset($searchVars['after'])) $conditions = array('start_date >' => $searchVars['after']);
         // process querystring from url
         foreach ($this->request->getQuery() as $field => $value) {
             if (!\in_array($field,$this->allowedSearchParams())) continue;
@@ -152,6 +165,7 @@ class ConferencesController extends AppController
             }
         }
         // variables for search view only
+        //debug($searchVars);
         $this->set(compact('searchVars',));
 
         return $this->renderList($view_title,$conditions,$tagarray);
@@ -177,15 +191,19 @@ class ConferencesController extends AppController
             ->order(['start_date ASC'])
             ->select($this->publicFields());
 
+        //make a validated tagstring
+        $vtagstring='';
         if ($tagarray!==null){
-            $found_valid=false;//sj - if not at least one valid tag throw a NotFound
+            $found_valid=[];//sj - if not at least one valid tag throw a NotFound
             $where=[];
             //make a "where" array
             foreach ($tagarray as $stag){
                $where[]=['Tags.name LIKE'=>"{$stag}.%"];
-               if (\in_array($stag,$valid_tag_checker)) $found_valid=true;
+               //make array of valid tags
+               if (\in_array($stag,$valid_tag_checker)) $found_valid[]=$stag;
             }
-            if (!$found_valid) throw new NotFoundException();
+            if (empty($found_valid)) throw new NotFoundException();
+            $vtagstring=implode('-',$found_valid);
             //add the Tag match to the existing $query
             $query->matching('Tags',function (\Cake\ORM\Query $q) use($where){
                 return $q->where(['OR'=>$where]);
@@ -225,6 +243,7 @@ class ConferencesController extends AppController
                            'tagarray',
                            'tag_dropdown',
                            'showEdit',
+                           'vtagstring',
         ));
         if ($this->request->getAttribute('params')['_ext']==='rss') return $this->render('rss/index');
         return $this->render('index');
@@ -548,9 +567,9 @@ class ConferencesController extends AppController
                                 '_full' => true
         ]);
         $contactUrl = Router::url(['controller' => 'Conferences',
-                                   'action' => 'about#curators',
-                                   '_full' => true
-        ]);
+                                   'action' => 'about',
+                                   '#' => 'curators'
+        ],true);
 
         $mailer->setViewVars(['site_name'=>Configure::read('site.name'),
                               'viewUrl' => $viewUrl,

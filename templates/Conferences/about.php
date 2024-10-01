@@ -104,10 +104,10 @@ https://mathmeetings.net/at-ct
 These interfaces are accessed by adding the extension '.json' or '.xml' after your subject tags.
  For example:
 <?php echo $this->Html->link(
-  'at-gt.json', array('controller'=>'Conferences', 'action'=>'at-gt.json'));?>
+  'at-gt.json', array('controller'=>'Conferences', 'action'=>'index','_ext'=>'json','at-gt'));?>
  or
 <?php echo $this->Html->link(
-  'ag-nt.xml', array('controller'=>'Conferences', 'action'=>'ag-nt.xml'));?>.
+  'ag-nt.xml', array('controller'=>'Conferences', 'action'=>'index','_ext'=>'xml','ag-nt'));?>.
 </p>
 <p>
 You can use these, for instance, to set up an alternate front for the announements on this site.

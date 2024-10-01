@@ -188,8 +188,8 @@ else {
 <div>
   <div style="float:right;padding-top:.2pc">
 <?php
-  $tagstr=(\is_array($tagarray))?\implode('-',$tagarray):$tagarray;
-  echo $this->Html->link('RSS',['controller'=>'Conferences','action'=>'index',$tagstr,'_ext'=>'rss'],['fullBase'=>true]);
+  
+  echo $this->Html->link('RSS',['controller'=>'Conferences','action'=>'index',$vtagstring,'_ext'=>'rss'],['fullBase'=>true]);
 ?>
   </div>
 
@@ -207,7 +207,6 @@ else {
       'Update tag selection', array('controller'=>'Conferences','action'=>$tagstring), array('id'=>'tag_link')),
     'div'=>array('style'=>'display:none','id'=>'tagSelectDiv')
   ));*/
-
   $form_wrapper = [
       'inputContainer' => '<div id="tagSelectDiv" style="display:none;" class=" {{type}}{{required}}">{{content}}</div>',
   ];
@@ -219,14 +218,14 @@ else {
     'value'=>$tagarray,
     'label'=>'Subject Tags',
     'name'=>'tag_select',
-    'onchange'=>"updateTagLink('".$this->Url->build(['controller'=>'Conferences','action'=>'index'],['fullBase'=>true])."');",
+    'onchange'=>"updateTagLink('".$this->Url->build(['_name'=>'home'],['fullBase'=>true])."');",
 
   ]);
   //disables the SecurityComponent
   //$this->Form->unlockField('Tag');
   echo $this->Form->end();
 
-  echo $this->Html->link('Update tag selection', ['controller'=>'Conferences',$tagstring], ['id'=>'tag_link']);
+  echo $this->Html->link('Update tag selection', ['action'=>'index',$vtagstring], ['id'=>'tag_link']);
 ?>
 <script>
 <!--

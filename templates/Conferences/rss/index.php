@@ -1,7 +1,7 @@
 <?php
 use Cake\Core\Configure;
 $this->set('documentData',['xmlns:atom' => 'http://www.w3.org/2005/Atom']);
-$self_url=$this->Rss->link($this->request->getAttribute('params'),$tagarray);
+$self_url=$this->Url->build(['action'=>'index','_ext'=>'rss',$vtagstring],['fullBase'=>true]);
 $this->set('channelData',[ 
     'title' => __(Configure::read('site.name')." Announcements"),
     'link' => $self_url,

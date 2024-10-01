@@ -57,21 +57,25 @@ return function (RouteBuilder $routes): void {
          */
         $builder->setExtensions(['rss','ics','json','xml']);
         //$builder->setExtensions(['rss','ics']);
-        $builder->connect('/', ['controller' => 'Conferences', 'action' => 'index']);
-
-        //$builder->connect('/conferences/view/*', ['controller' => 'Conferences', 'action' => 'view'],['persist'=>'id']);
+        $builder->connect('/*', ['controller' => 'Conferences', 'action' => 'index'],['_name'=>'home']);
+        $builder->connect('/index',['controller'=>'Conferences','action'=>'index'],['_name'=>'index']);
         $builder->connect('/conferences/view/{id}', ['controller' => 'Conferences', 'action' => 'view'])->setPass(['id']);
+        $builder->connect('/conferences/edit/{id}', ['controller' => 'Conferences', 'action' => 'edit'])->setPass(['id']);
+        $builder->connect('/conferences/edit/{id}/{editkey}', ['controller' => 'Conferences', 'action' => 'edit'])->setPass(['id','editkey']);
+        $builder->connect('/conferences/delete/{id}/{editkey}', ['controller' => 'Conferences', 'action' => 'delete'])->setPass(['id','editkey']);
         $builder->connect('/conferences/add', ['controller' => 'Conferences', 'action' => 'add'])->setPass(['id']);
         $builder->connect('/conferences/search', ['controller' => 'Conferences', 'action' => 'search']);
         $builder->connect('/conferences/about', ['controller' => 'Conferences', 'action' => 'about']);
-
         $builder->connect('/conferences/curatorCookie', ['controller' => 'Conferences', 'action' => 'curatorCookie']);
-        $builder->connect('/conferences/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
-        $builder->connect('/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
+
+        $builder->connect('/conferences/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'],['_name'=>'tagstring'])->setPass(['tagstring']);
+        
+        //$builder->connect('/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'])->setPass(['tagstring']);
         /*
          * ...and connect the rest of 'Pages' controller's URLs.
+            NOTE: we have none
          */
-        $builder->connect('/pages/*', 'Pages::display');
+        //$builder->connect('/pages/*', 'Pages::display');
 
 
 
@@ -88,7 +92,7 @@ return function (RouteBuilder $routes): void {
          * You can remove these routes once you've connected the
          * routes you want in your application.
          */
-        $builder->fallbacks();
+        //$builder->fallbacks();
     });
 
     /*
