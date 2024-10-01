@@ -1,4 +1,5 @@
 <?php
+use Cake\Core\Configure;
 echo '<h1>'.$view_title.'</h1>';
 ?>
 
@@ -84,15 +85,15 @@ This conference is going to be great!  See the website for more details.
   For example, to choose <span class="tag">at.algebraic-topology</span> and
 <span class="tag">ct.category-theory</span>, use the following URL:</p>
 <pre>
-https://mathmeetings.net/at-ct
+<?php echo $this->Html->link(
+  Configure::read('site.host').'/at-ct',
+  array('controller'=>'Conferences', 'action'=>'index',
+  'at-ct'),
+  ['fullBase'=>true]);?>
 </pre>
 
-<p>Note: Multiple tags are combined with an OR condition, meaning that you will see announcements which are tagged with any of the tags you select.
+<p>Note: Multiple tags are combined with an OR condition, meaning that you will see announcements that are tagged with any of the tags you select.
   For now, it does not seem useful to introduce more complex search logic.</p>
-
-<p>Subject tags are supported on the main list, the rss feed, and the new announcement form.
-  On the form, any active subject tags are used to set the default tags for the new announcement.</p>
-
 </div>
 
 
@@ -108,6 +109,14 @@ These interfaces are accessed by adding the extension '.json' or '.xml' after yo
  or
 <?php echo $this->Html->link(
   'ag-nt.xml', array('controller'=>'Conferences', 'action'=>'index','_ext'=>'xml','ag-nt'));?>.
+For the full list of announcements in all subject areas, use
+<?php echo $this->Html->link(
+  'index.json', array('controller'=>'Conferences', 'action'=>'index','_ext'=>'json','index'));?>
+
+or
+
+<?php echo $this->Html->link(
+  'index.xml', array('controller'=>'Conferences', 'action'=>'index','_ext'=>'xml','index'));?>.
 </p>
 <p>
 You can use these, for instance, to set up an alternate front for the announements on this site.
@@ -117,11 +126,29 @@ Contact Niles if you are interested in additional features.</p>
 <p>Here is a list of known alternative fronts.  Let us know if you maintain one that you would like added to the list!
 </p>
 <ul>
-  <li><a href="https://mathweb.ucsd.edu/~kedlaya/cgi-bin/confs.cgi">Kiran Kedlaya's Conferences Arithmetic Geometry</a></li>
+  <li><a href="https://mathweb.ucsd.edu/~kedlaya/cgi-bin/confs.cgi">Kiran Kedlaya's Conferences in Arithmetic Geometry</a></li>
   <li><a href="https://jbirnick.net/conferences/numbertheory/">Johann Birnick's Number Theory Conferences / Programs / Meetings</a></li>
 </ul>
 </div>
 
+<h2 class="target" id="rss_about">RSS feeds</h2>
+<div>
+
+<p>Each list of announcements has a corresponding rss feed.
+For the main list, the feed is at
+<?php echo $this->Html->link('index.rss',
+  array('controller'=>'Conferences', 'action'=>'index',
+  '_ext'=>'rss'),
+  ['fullBase'=>true]);?>.
+For a subject list, use a tag string such as
+<?php echo $this->Html->link('at-gt.rss',
+  array('controller'=>'Conferences', 'action'=>'index',
+  'at-gt', '_ext'=>'rss'),
+  ['fullBase'=>true]);?>.
+</p>
+
+
+</div>
 
 
 <h2 class="target" id="cal_about">Calendar Links</h2>
