@@ -14,7 +14,11 @@ string matching in the indicated fields.  If you have more sophisticated search
 needs, please <a href="http://nilesjohnson.net/contact.html" target="blank">let
 Niles know</a>.</p>';
 
-echo "<h2>Results Below: ".count($conferences)." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
+
+echo "<h2>Results Below: ".$this->Paginator->counter('{{count}}')." Announcement" . (count($conferences) != 1 ? 's' : '') . "</h2>";
+echo $this->Paginator->total()>1?$this->Paginator->counter(
+    'Page {{page}} of {{pages}}, showing {{current}} records out of
+     {{count}} total, starting on record {{start}}, ending on {{end}}'):'';
 
 echo $this->Form->create(null);
 $this->Form->setTemplates($form_wrapper);
@@ -29,7 +33,7 @@ echo $this->Form->control('Tag', array(
 ));
 echo $this->Form->control('after', array(
     'label'=>'Begins after',
-    'value' => $searchVars['after'] ?? '',
+    'value' => isset($searchVars['after']) && $searchVars['after']!=='all'?$searchVars['after']:'',
     'type'=>'date',
     'div'=>'input datefield',
 ));
@@ -376,5 +380,30 @@ echo
 </div>
 
 <?php endforeach; ?>
-
+<?php //passing querystring to paginator
+    if (!isset($paginator_params)) $paginator_params=[];
+    
+ ?>
+<?php if ($this->Paginator->total()>1):?>
+    <div class="paginator">
+        <ul class="pagination">
+            <?= $this->Paginator->first('<< ' . __('first'),$paginator_params) ?>
+            <?= $this->Paginator->prev('< ' . __('previous'),$paginator_params) ?>
+            <?= $this->Paginator->numbers($paginator_params) ?>
+            <?= $this->Paginator->next(__('next') . ' >',$paginator_params) ?>
+            <?= $this->Paginator->last(__('last') . ' >>',$paginator_params) ?>
+        </ul>
+        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+    </div>
+    <style>
+      .paginator ul.pagination > li{
+        display:inline-block;
+      }
+      .paginator ul.pagination > li.active a{
+        color: black;
+        text-decoration:none;
+        cursor:default;
+      }
+    </style>
+  <?php endif ?>
 </div>

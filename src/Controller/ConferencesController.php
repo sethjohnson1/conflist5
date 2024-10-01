@@ -119,7 +119,8 @@ class ConferencesController extends AppController
             foreach ($this->request->getData() as $field=>$value){
                 if (!\in_array($field,$this->allowedSearchParams())) continue;
                 if (empty($value) && $field!=='after') continue; //let after be empty
-                $new_query[$field]=$value;
+                if (empty($value) && $field==='after') $new_query[$field]='all';
+                else $new_query[$field]=$value;
             }
             return $this->redirect(['action' => 'search','?'=>$new_query]);
         }
@@ -133,17 +134,17 @@ class ConferencesController extends AppController
         }
         else $conditions=[];
         
-
         // process querystring from url
         foreach ($this->request->getQuery() as $field => $value) {
             if (!\in_array($field,$this->allowedSearchParams())) continue;
-            if ($value != '') {
+            if ($value !== '') {
                 $searchVars[$field] = $value;
                 if ($field == 'before') {
                     $conditions['start_date <'] = $value;
                 }
                 elseif ($field == 'after') {
-                    $conditions['start_date >'] = $value;
+                    if ($value!=='all') $conditions['start_date >'] = $value;
+                    //break;
                 }
                 elseif ($field == 'mod_before') {
                     $conditions['modified <'] = $value;
@@ -161,8 +162,10 @@ class ConferencesController extends AppController
 		//debug($conditions);
             }
         }
+        $paginator_params=[];
+        if (!empty($searchVars)) $paginator_params=['url'=>['?'=>$searchVars]];
         // variables for search view only
-        $this->set(compact('searchVars',));
+        $this->set(compact('searchVars','paginator_params'));
 
         return $this->renderList($view_title,$conditions,$tagarray);
     }
