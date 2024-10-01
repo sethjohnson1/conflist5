@@ -61,8 +61,10 @@ if (!isset($tagstring)) {
       <?php echo $this->Html->link('Main List',array('controller' =>
       'conferences', 'action' => 'index'))?>
       |
-      <?php echo $this->Html->link('New Announcement',array('controller' =>
-      'conferences', 'action' => 'add', $tagstring))?>
+      <?php 
+      if (!isset($vtagstring)) $vtagstring='';
+      echo $this->Html->link('New Announcement',array('controller' =>
+      'conferences', 'action' => 'add', $vtagstring))?>
       |
       <?php echo $this->Html->link('Search',array('controller' =>
       'conferences', 'action' => 'search'))?>

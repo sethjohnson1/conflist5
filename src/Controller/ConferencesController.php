@@ -300,6 +300,11 @@ class ConferencesController extends AppController
         $t = $this->Tag->find('first',array('conditions'=>array('Tag.id'=>$tagid)));
         return $t['Tag']['name'];
     }
+    function tag_id_from_name($tagname) {
+        $t = $this->Conferences->Tags->find('all',['conditions'=>['Tags.name LIKE'=>$tagname.'.%']]);
+        $row=$t->first();
+        return $row->id;
+    }
 
     /**
      * View method
@@ -337,7 +342,7 @@ class ConferencesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add(){
+    public function add($tagstring=''){
         $conference = $this->Conferences->newEmptyEntity();
         $countries=$this->loadCountries();
         $time_error='Unspecified error has occurred';
@@ -388,7 +393,13 @@ class ConferencesController extends AppController
             }
         }
         $tags = $this->Conferences->Tags->find('list', limit: 200)->all();
-        $this->set(compact('conference', 'tags','countries'));
+        $tagarray=!empty($tagstring)?\explode('-',$tagstring):[];
+        $tagids=[];
+        foreach ($tagarray as $ftag){
+            if (null!==$this->tag_id_from_name($ftag)) $tagids[]=$this->tag_id_from_name($ftag);
+        }
+        
+        $this->set(compact('conference', 'tags','countries','tagids'));
     }
 
     /**

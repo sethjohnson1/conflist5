@@ -63,7 +63,8 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/conferences/edit/{id}', ['controller' => 'Conferences', 'action' => 'edit'])->setPass(['id']);
         $builder->connect('/conferences/edit/{id}/{editkey}', ['controller' => 'Conferences', 'action' => 'edit'])->setPass(['id','editkey']);
         $builder->connect('/conferences/delete/{id}/{editkey}', ['controller' => 'Conferences', 'action' => 'delete'])->setPass(['id','editkey']);
-        $builder->connect('/conferences/add', ['controller' => 'Conferences', 'action' => 'add'])->setPass(['id']);
+        $builder->connect('/conferences/add/{tagstring}', ['controller' => 'Conferences', 'action' => 'add'])->setPass(['tagstring']);
+        $builder->connect('/conferences/add', ['controller' => 'Conferences', 'action' => 'add']);
         $builder->connect('/conferences/search', ['controller' => 'Conferences', 'action' => 'search']);
         $builder->connect('/conferences/about', ['controller' => 'Conferences', 'action' => 'about']);
         $builder->connect('/conferences/curatorCookie', ['controller' => 'Conferences', 'action' => 'curatorCookie']);
