@@ -277,6 +277,7 @@ class ConferencesController extends AppController
             'country',
             'institution',
             'meeting_type',
+	    'description',
             'after',
 	    'before',
 	    'mod_before',
