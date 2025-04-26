@@ -4,17 +4,17 @@ echo '<h1>'.$view_title.'</h1>';
 ?>
 
 
-<p>MathMeetings.net provides a list of conferences and similar meetings in mathematics.
-  There are a number of other such lists, but this list aims to be more complete by allowing <em>anyone at all</em> to add announcements.
-  This is similar in spirit to a wiki, but the underlying software is focused on efficient storing, searching, and sorting of conference announcements.</p>
-
-<p>Announcements are filtered by subject tags, and are curated by <a href=#curators>the volunteers listed below</a>.
-  <em>Note</em>: This site restricts itself to meetings whose focus is mathematics.
-  Announcements about more general meetings are typically not appropriate and may be deleted.</p>
+<p>MathMeetings.net provides a list of conferences and similar meetings in mathematics, filtered by subject tags.
+There are a number of other such lists, but this list aims to be more complete by allowing <em>anyone at all</em> to add announcements.
+This is similar in spirit to a wiki, but the underlying software is focused on efficient storing, searching, and sorting of conference announcements.</p>
 
 <p>The site is developed by <a href="https://nilesjohnson.net" target="blank">Niles Johnson</a> with significant technical help and hosting by <a href="https://codytechnical.com">Seth Johnson of Cody Technical Services</a>.
   It began as a list for conferences in topology, but with the addition of subject tags we hope that it will be useful more generally.
   Please <a href="https://nilesjohnson.net/contact.html" target="blank">contact Niles</a> if you have further quesitons or comments!</p>
+
+
+<p> <em>Note</em>: This site restricts itself to meetings whose focus is mathematics.
+  Announcements about more general meetings are typically not appropriate and may be deleted.</p>
 
 
 <h2>Adding Announcements</h2>
@@ -222,6 +222,14 @@ know</a>!</p>
 <p>The list of countries provided when adding new announcements is from the <?php echo $this->Html->link('World countries','https://github.com/mledoze/countries');?> database, licensed under the <?php echo $this->Html->link('Open Database License 1.0','http://opendatacommons.org/licenses/odbl/1.0/')?>.
   The canonical names for our database are English spellings, but the entry box accepts a wide range of alternatives from the "<span style="font-family: mono">altSpellings</span>" field.</p>
 </div>
+
+
+<h2>Donations</h2>
+
+<p>We are now accepting donations toward our growing server and maintenance costs.
+  Those who wish to do so can donate via <a href="https://ko-fi.com/niles25980">Niles's Ko-Fi account</a>.
+  Many thanks to those who can support us this way!</p>
+
 
 <h2>Source Code</h2>
 <div>
