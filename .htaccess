@@ -12,3 +12,5 @@
     RewriteRule    ^$    webroot/    [L]
     RewriteRule    (.*) webroot/$1    [L]
 </IfModule>
+
+Access-Control-Allow-Origin: *
