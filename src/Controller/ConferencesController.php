@@ -108,7 +108,7 @@ class ConferencesController extends AppController
         }
         //this could be in beforeFilter if you def want to expose the entire Controller. With GET only I think you're OK
         $this->response = $this->response->cors($this->request)
-            ->allowOrigin('*') //don't use [*] here, just *
+            ->allowOrigin('*') //or ['*'] 
             ->allowMethods(['GET'])
             ->build();
 
