@@ -47,6 +47,7 @@ class ConferencesController extends AppController
         $this->set('addon_title','');
         //$this->Security->csrfCheck = false;
         //$this->Security->blackHoleCallback = 'blackhole';
+
     }
     public function beforeRender(\Cake\Event\EventInterface $event){
         parent::beforeRender($event);
@@ -105,6 +106,11 @@ class ConferencesController extends AppController
         else {
             $tagarray = null;
         }
+        //this could be in beforeFilter if you def want to expose the entire Controller. With GET only I think you're OK
+        $this->response = $this->response->cors($this->request)
+            ->allowOrigin('*') //don't use [*] here, just *
+            ->allowMethods(['GET'])
+            ->build();
 
         return $this->renderList($view_title,$conditions,$tagarray);
     }
