@@ -63,6 +63,7 @@ class ConferencesController extends AppController
         $rss_actions=['index','search'];
         if (!empty($this->request->getAttribute('params')['_ext'])){
             if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)){
+
                 $this->addViewClasses([JsonView::class, XmlView::class]);
                 $this->viewBuilder()->setLayout('ajax');
              }
@@ -125,7 +126,7 @@ class ConferencesController extends AppController
                     //but deal with comma
                     if (!is_array($tagarray)) $tagarray=explode(',',$tagarray);
                 } 
-                //debug($tagarray);
+                
                 //this could be added with others above
                 $form_wrapper=$this->setFormTemplate();
                 $this->set(compact('form_wrapper'));
@@ -240,16 +241,16 @@ class ConferencesController extends AppController
         //debug($query);
 
         $conferences = $this->paginate($query,['limit'=>100]);
-        // debug($conferences);
 
 
-        //debug($conferences);
+        //debug($conferences->pagingParams());
 
         if(null!==$this->request->getAttribute('params')['_ext']) {
             $file_ex=$this->request->getAttribute('params')['_ext'];
             // if ($file_ex=='rss') $this -> render('rss/index');
-            $this->set(compact('conferences'));
-            $this->viewBuilder()->setOption('serialize', ['conferences']);
+            $paging=$conferences->pagingParams();
+            $this->set(compact('conferences','paging'));
+            $this->viewBuilder()->setOption('serialize', ['conferences','paging']);
             //$this -> render('ajax');
         }
 
