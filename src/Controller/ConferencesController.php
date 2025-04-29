@@ -117,7 +117,7 @@ class ConferencesController extends AppController
          * sj example of getting queryString conditions from search
          * */
         if (!empty($this->request->getQuery()) 
-            //&& $this->request->is(['json','xml'])
+            && $this->request->is(['json','xml'])
             ){
                 $conditions=$this->search(true);
                 if (null!==$this->request->getQuery('tags')){
