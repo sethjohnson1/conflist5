@@ -115,13 +115,21 @@ class ConferencesController extends AppController
         /**
          * sj example of getting queryString conditions from search
          * */
-        if (!empty($this->request->getQuery())){
-            $conditions=$this->search(true);
-            //debug($conditions);
-            //this could be added with others above
-            $form_wrapper=$this->setFormTemplate();
-            $this->set(compact('form_wrapper'));
-        }
+        if (!empty($this->request->getQuery()) 
+            //&& $this->request->is(['json','xml'])
+            ){
+                $conditions=$this->search(true);
+                if (null!==$this->request->getQuery('tags')){
+                    //pass directly as an array like ?tags[]=ac&tags[]=ag
+                    $tagarray=$this->request->getQuery('tags');
+                    //but deal with comma
+                    if (!is_array($tagarray)) $tagarray=explode(',',$tagarray);
+                } 
+                //debug($tagarray);
+                //this could be added with others above
+                $form_wrapper=$this->setFormTemplate();
+                $this->set(compact('form_wrapper'));
+            }
         /**
          * End example
          * */
