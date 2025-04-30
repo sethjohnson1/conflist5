@@ -63,6 +63,7 @@ class ConferencesController extends AppController
         $rss_actions=['index','search'];
         if (!empty($this->request->getAttribute('params')['_ext'])){
             if (\in_array($this->request->getAttribute('params')['_ext'],$serialized)){
+
                 $this->addViewClasses([JsonView::class, XmlView::class]);
                 $this->viewBuilder()->setLayout('ajax');
              }
@@ -112,16 +113,38 @@ class ConferencesController extends AppController
             ->allowMethods(['GET'])
             ->build();
 
+        /**
+         * sj example of getting queryString conditions from search
+         * */
+        if (!empty($this->request->getQuery()) 
+            && $this->request->is(['json','xml'])
+            ){
+                $conditions=$this->search(true);
+                if (null!==$this->request->getQuery('tags')){
+                    //pass directly as an array like ?tags[]=ac&tags[]=ag
+                    $tagarray=$this->request->getQuery('tags');
+                    //but deal with comma
+                    if (!is_array($tagarray)) $tagarray=explode(',',$tagarray);
+                } 
+                
+                //this could be added with others above
+                $form_wrapper=$this->setFormTemplate();
+                $this->set(compact('form_wrapper'));
+            }
+        /**
+         * End example
+         * */
         return $this->renderList($view_title,$conditions,$tagarray);
     }
 
-    public function search() {
+    public function search($return_only=false) {
         $searchVars = [];
         $tagarray = null; //default
         $view_title='Search Announcements';
         $new_query=[];
         //if POST then build a search query and redirect
-        if ($this->request->is(['post'])) {
+        //
+        if ($this->request->is(['post']) && !$return_only) {
             foreach ($this->request->getData() as $field=>$value){
                 if (!\in_array($field,$this->allowedSearchParams())) continue;
                 if (empty($value) && $field!=='after') continue; //let after be empty
@@ -165,14 +188,14 @@ class ConferencesController extends AppController
                 else {
                     $conditions[$field.' LIKE'] = '%'.$value.'%';
                 }
-		//debug($conditions);
+        //debug($conditions);
             }
         }
         $paginator_params=[];
         if (!empty($searchVars)) $paginator_params=['url'=>['?'=>$searchVars]];
         // variables for search view only
         $this->set(compact('searchVars','paginator_params'));
-
+        if ($return_only) return $conditions;
         return $this->renderList($view_title,$conditions,$tagarray);
     }
 
@@ -218,16 +241,16 @@ class ConferencesController extends AppController
         //debug($query);
 
         $conferences = $this->paginate($query,['limit'=>100]);
-        // debug($conferences);
 
 
-        //debug($conferences);
+        //debug($conferences->pagingParams());
 
         if(null!==$this->request->getAttribute('params')['_ext']) {
             $file_ex=$this->request->getAttribute('params')['_ext'];
             // if ($file_ex=='rss') $this -> render('rss/index');
-            $this->set(compact('conferences'));
-            $this->viewBuilder()->setOption('serialize', ['conferences']);
+            $paging=$conferences->pagingParams();
+            $this->set(compact('conferences','paging'));
+            $this->viewBuilder()->setOption('serialize', ['conferences','paging']);
             //$this -> render('ajax');
         }
 
@@ -283,11 +306,11 @@ class ConferencesController extends AppController
             'country',
             'institution',
             'meeting_type',
-	    'description',
+        'description',
             'after',
-	    'before',
-	    'mod_before',
-	    'mod_after',
+        'before',
+        'mod_before',
+        'mod_after',
 
         ];
     }

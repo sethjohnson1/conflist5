@@ -146,13 +146,17 @@ else {
     <?php echo $this->Html->link('New Announcement', array('action' => 'add',$tagstring), array('class' => 'button', 'id' => 'add-button'));?>
     </p>
   </div>
+  <h4>Update 2025-04</h4>
+      <p>Want to support the site? We now have a <a
+          style="font-size: 100%; font-style: italic; color:#11728a; font-weight:bold"
+          href="https://ko-fi.com/niles25980">Ko-Fi Donation Link</a>.  More info there.</p>
+<!--
   <h4>Updates 2024-09</h4>
   <ul>
     <li>Rewritten for the latest versions of PHP (8.2) and CakePHP (5.x)</li>
     <li><span class="modinfo" style="font-size: 100%; font-style: italic; color:green; font-weight:bold">[New]</span> label for announcements added or updated in the last 30 days</li>
     <li><a href="/conferences/search">Search form</a> for filtering by date of meeting, date of announcement, and other fields</li>
   </ul>
-<!--
   <h4>Updates 2019-07</h4>
   <ul>
     <li>We're now authenticating email; this should decrease the chance that confirmation emails land in Spam or Junk folders.</li>
@@ -180,9 +184,9 @@ else {
   changes to the user interface.  If you notice something not working
   properly, please let Niles know.</p>
 -->
-
-  <p>See the new <a href="https://github.com/sethjohnson1/conflist5" target="github">git repository</a> (GitHub) with additional update notes.</p>
-
+<!--
+  <p>Additional info at our <a href="https://github.com/sethjohnson1/conflist5" target="github">git repository</a> (GitHub).</p>
+-->
 </div>
 
 
