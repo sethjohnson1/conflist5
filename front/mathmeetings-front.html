@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Front end for mathmeetings.net</title>
+
+<script>
+
+<!-- first demo -->
+var getJSON = function(url, callback, elementId, showDesc) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status == 200) {
+        callback(null, xhr.response, elementId, showDesc);
+      } else {
+        callback(status);
+      }
+    };
+    xhr.send();
+};
+
+var showJSON = function(err, data, elementId, showDesc) {
+  if (err != null) {
+    console.log('Something went wrong: ' + err);
+  } else {
+      var d = document.getElementById(elementId);
+      d.style.height = '20em';
+      d.style.overflowY = 'scroll';
+      d.style.padding = '1em';
+      d.style.border= '1px solid #ccc';
+      //d.style.width = '90%';
+      var t = document.createElement('table');
+      d.appendChild(t);
+      data.conferences.forEach(function(i){
+        var r = t.insertRow();
+        r.insertCell().innerHTML = "<a href='"+i.homepage+"'>"+i.title.substring(0,40)+"</a>";
+        r.insertCell().innerHTML = i.start_date;
+        if (showDesc) {
+            r.insertCell().innerHTML = i.description;
+        }
+      }, {showDesc : showDesc}); 
+  }
+}
+
+getJSON('https://mathmeetings.net/at-gt.json',showJSON,'announcements',false);
+
+
+getJSON('https://mathmeetings.net/.json?description=graduate+student',showJSON,'searchdemo',true);
+
+</script>
+<style>
+table td {
+  vertical-align: top;
+  padding: 1pc 1ex;
+  border-bottom: 1px dashed #333;
+}
+p.code {
+  background: #eee;
+  font-family:mono;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Demo of front end for mathmeetings.net</h1>
+
+<p>Use javascript to add list of announcements pulled
+  from <a href="http://mathmeetings.net/at-gt.json">http://mathmeetings.net/at-gt.json</a>.
+</p>
+
+<p>This is created by adding javascript code to the document header,
+  and then an empty div to the html body.</p>
+
+<div id="announcements"></div>
+
+<p>&nbsp;</p>
+
+<h1>Second demo</h1>
+ <p>This one uses a query string to show conferences where the description field of the announcement contains "graduate student" (case insensitive).</p>
+
+
+ <div id="searchdemo"></div>
+
+
+<h1>Other Examples</h1>
+
+<p>The first demo just uses a simple subject tag url.</p>
+<p class=code>
+<a href="https://mathmeetings.net/at-gt.json">https://mathmeetings.net/at-gt.json</a>
+</p>
+
+<p>The second demo uses a query string for the json interface.  The query string format is the same as that of the <a href="https://mathmeetings.net/conferences/search">search form</a> (execpt for tags; see below).</p>
+<p class=code>
+<a href="https://mathmeetings.net/.json?description=graduate+student">https://mathmeetings.net/.json?description=graduate+student</a>
+</p>
+
+<p>The search query for tags uses a different syntax.  Here is a more complex example that shows all conferences in the database after 01 January 2020 with subject tags any of ac, ag, or at, and description containing the word 'birthday'.</p>
+
+<p class=code>
+<a href="https://mathmeetings.net/.json?after=2020-01-01&tags[]=ac&tags[]=ag&tags[]=at&description=birthday">https://mathmeetings.net/.json?after=2020-01-01&amp;tags[]=ac&amp;tags[]=ag&amp;tags[]=at&amp;description=birthday</a>
+</p>
+
+
+
+</body>
+
+
+
+
+</html>
