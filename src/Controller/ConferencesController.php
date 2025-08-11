@@ -365,6 +365,10 @@ class ConferencesController extends AppController
         $view_title='About';
         $this->set(compact('view_title'));
     }
+    public function maintenance() {
+        $view_title='Site Maintenance';
+        $this->set(compact('view_title'));
+    }
 
 
     /**
@@ -373,6 +377,10 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add($tagstring=''){
+        if (Configure::read('readOnly')) {
+            $this->Flash->error(__('add method temporarily disabled for site maintenance'));
+            $this->redirect(['action' => 'maintenance']);
+        }
         $conference = $this->Conferences->newEmptyEntity();
         $countries=$this->loadCountries();
         $time_error='Unspecified error has occurred';
@@ -656,7 +664,7 @@ class ConferencesController extends AppController
 
             $mailer = $this->prepEmail($id);
             //do something here
-
+           
             //reset to for testing
             $testEmail = Configure::read('site.test_email');
             $mailer->setTo($testEmail);
@@ -664,17 +672,19 @@ class ConferencesController extends AppController
             $mailer->setBcc($testEmail); // clear previously set bcc
             // debug($conference);
             // debug($testEmail);
-            // debug($mailer);
+            //debug($mailer);
 
             //NOTE: this doesn't do much because the SocketException is caught in the framework before this
+            $delivered=false;
             try{
                 $mailer->deliver();
+                $delivered=true;
             }
             catch (Exception $e){
                 debug($e);
             }
 
-            if ($mailer->deliver()) {
+            if ($delivered) {
                 if (\is_array($testEmail)) $testEmail=implode(', ',$testEmail);
                 $this->Flash->success(__('email sent to '.$testEmail));
             }

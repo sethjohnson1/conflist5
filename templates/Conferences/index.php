@@ -139,12 +139,22 @@ else {
   at all is welcome to add announcements.</p>
 
 
-
-  <div class="new">
+      <div class='new'>
+<?php
+      if (Configure::read('readOnly')) {
+          echo "<h2>Temporary Maintenance</h2>";
+          echo "<p>The posting of new announcements is temporarily disabled. Further details are on our ";
+          echo $this->Html->link('maintenance information', array('action' => 'maintenance'));
+          echo " page.</p>";
+      }
+      else {
+          echo "
     <h2>Know of a meeting not listed here?  Add it now!</h2>
-    <p>
-    <?php echo $this->Html->link('New Announcement', array('action' => 'add',$tagstring), array('class' => 'button', 'id' => 'add-button'));?>
-    </p>
+    <p>";
+          echo $this->Html->link('New Announcement', array('action' => 'add',$tagstring), array('class' => 'button', 'id' => 'add-button'));
+          echo "</p>";
+        }
+        ?>
   </div>
   <h4>Update 2025-04</h4>
       <p>Want to support the site? We now have a <a

@@ -67,7 +67,10 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/conferences/add', ['controller' => 'Conferences', 'action' => 'add']);
         $builder->connect('/conferences/search', ['controller' => 'Conferences', 'action' => 'search']);
         $builder->connect('/conferences/about', ['controller' => 'Conferences', 'action' => 'about']);
+        $builder->connect('/conferences/maintenance', ['controller' => 'Conferences', 'action' => 'maintenance']);
         $builder->connect('/conferences/curatorCookie', ['controller' => 'Conferences', 'action' => 'curatorCookie']);
+        
+        $builder->connect('/conferences/testEmailSend/{id}', ['controller' => 'Conferences', 'action' => 'testEmailSend'])->setPass(['id']);
 
         $builder->connect('/conferences/{tagstring}', ['controller' => 'Conferences', 'action' => 'index'],['_name'=>'tagstring'])->setPass(['tagstring']);
         

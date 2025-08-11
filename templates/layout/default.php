@@ -63,8 +63,13 @@ if (!isset($tagstring)) {
       |
       <?php 
       if (!isset($vtagstring)) $vtagstring='';
-      echo $this->Html->link('New Announcement',array('controller' =>
-      'conferences', 'action' => 'add', $vtagstring))?>
+      if (Configure::read('readOnly')) {
+          echo $this->Html->link('Site Maintenance',array('action' => 'maintenance'));
+      }
+      else {
+          echo $this->Html->link('New Announcement',array('controller' => 'conferences', 'action' => 'add', $vtagstring));
+           }
+      ?>
       |
       <?php echo $this->Html->link('Search',array('controller' =>
       'conferences', 'action' => 'search'))?>

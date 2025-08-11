@@ -16,6 +16,7 @@ return [
      * true: Errors and warnings shown.
      */
     'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
+    'readOnly' => false, // boolean for read-only mode
 
     /*
      * Security and encryption configuration
