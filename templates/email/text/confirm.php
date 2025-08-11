@@ -13,16 +13,22 @@ The announcement data is copied below, and is also available at:
 If you need to edit or delete your announcement, use the unique edit/delete link:
 <?=$editUrl?>
 
-
 If you have any difficulties, questions, or comments, don't hesitate
 to contact the curators:
 <?=$contactUrl?>
 
 
-
-
 best,
 The Curators
+
+p.s. We are now accepting donations toward our growing server and maintenance costs. Those who wish to do so can donate via Niles's Ko-Fi account:
+
+  https://ko-fi.com/niles25980
+
+Many thanks to those who can support us this way!
+
+
+
 
 
 Announcement Data:
@@ -51,6 +57,6 @@ echo !$content['description'] ? 'none' : strip_tags($content['description']);
 ?>
 
 
-<?php
-    //echo $content;
-?>
+
+
+
