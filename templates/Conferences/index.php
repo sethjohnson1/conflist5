@@ -141,7 +141,7 @@ else {
 
       <div class='new'>
 <?php
-      if (Configure::read('readOnly')) {
+      if (Configure::read('maintenance.readOnly')) {
           echo "<h2>Temporary Maintenance</h2>";
           echo "<p>The posting of new announcements is temporarily disabled. Further details are on our ";
           echo $this->Html->link('maintenance information', array('action' => 'maintenance'));

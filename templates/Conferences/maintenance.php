@@ -4,17 +4,12 @@ echo '<h1>'.$view_title.'</h1>';
 ?>
 
 <?php
-    if (Configure::read('readOnly')) {
-        echo "
-<p>The addition of new announcements is temporarily disabled due to an internal bug with confirmation emails.  We hope to have this resolved as soon as possible.</p>
-
-<h2>Beginning of maintenance period</h2>
-    <p>2025-08-11</p>
-
-
-<h2>Expected end of maintenance period</h2>
-    <p>Within one week</p>
-";
+    if (Configure::read('maintenance.readOnly')) {
+        echo "<p>".Configure::read('maintenance.maintMessage')."</p>";
+        echo "<h2>Beginning of maintenance period</h2>";
+        echo "<p>".Configure::read('maintenance.maintStart')."</p>";
+        echo "<h2>Expected end of maintenance period</h2>";
+        echo "<p>".Configure::read('maintenance.maintEnd')."</p>";
     }
     else {
         echo "<h2>No active maintenance</h2>";

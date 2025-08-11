@@ -377,7 +377,7 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add($tagstring=''){
-        if (Configure::read('readOnly')) {
+        if (Configure::read('maintenance.readOnly')) {
             $this->Flash->error(__('add method temporarily disabled for site maintenance'));
             $this->redirect(['action' => 'maintenance']);
         }

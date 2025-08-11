@@ -63,7 +63,7 @@ if (!isset($tagstring)) {
       |
       <?php 
       if (!isset($vtagstring)) $vtagstring='';
-      if (Configure::read('readOnly')) {
+      if (Configure::read('maintenance.readOnly')) {
           echo $this->Html->link('Site Maintenance',array('action' => 'maintenance'));
       }
       else {

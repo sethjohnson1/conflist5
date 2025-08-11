@@ -16,7 +16,17 @@ return [
      * true: Errors and warnings shown.
      */
     'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
-    'readOnly' => false, // boolean for read-only mode
+
+    /*
+      config settings for site maintenance
+      the info is displayed at /conferences/maintenance
+    */
+    'maintenance' => array(
+        'readOnly' => true, // boolean for read-only mode
+        'maintMessage' => 'The addition of new announcements is temporarily disabled due to an internal bug with confirmation emails. We hope to have this resolved as soon as possible.',
+        'maintStart' => '2025-08-11',
+        'maintEnd' => 'Within one week', // expected end
+    ),
 
     /*
      * Security and encryption configuration
