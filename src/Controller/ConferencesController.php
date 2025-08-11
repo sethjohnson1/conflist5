@@ -573,17 +573,21 @@ class ConferencesController extends AppController
         if ($this->Conferences->save($conference)) {
             $this->Flash->success(__('The announcement has been saved.'));
             $mailer = $this->prepEmail($conference->id);
-            $delivered=false;
-            try{
-                $delivered=$mailer->deliver();
-            }
-            catch (SocketException $e){
-                Log::write('error',"Failed to send email for conference {id}  {message}\n",['scope'=>['conflist'],'id'=>$conference->id,'message'=>$e->getMessage()]);
+            
+            if ($mailer){
+                $delivered=false;
+                try{
+                    $delivered=$mailer->deliver();
+                }
+                catch (\Throwable $e){
+                    Log::write('error',"Failed to send email for conference {id}  {message}\n",['scope'=>['conflist'],'id'=>$conference->id,'message'=>$e->getMessage()]);
+                }
+                
+                if ($delivered) {
+                    $this->Flash->success(__('Confirmation emails have been sent.'));
+                }   
             }
             
-            if ($delivered) {
-                $this->Flash->success(__('Confirmation emails have been sent.'));
-            }
             return $this->redirect(['action' => 'index']);
         }
         // else: save has failed
@@ -645,7 +649,16 @@ class ConferencesController extends AppController
         //gather and set values from $conference data
         $mailer->setSubject($conference->title);
         $to_array = preg_split("/[\s,]+/",$conference->contact_email);
-        $mailer->setTo($to_array); //does setTo still take an array argument??
+
+        try{
+            $mailer->setTo($to_array);
+        } 
+        catch (\Throwable $e){
+            //email failed
+            //debug($e);
+            Log::write('error',"setTo failed for conference {id}  {message}\n",['scope'=>['conflist'],'id'=>$conference->id,'message'=>$e->getMessage()]);
+            return false;
+        }
 
 
         //gather values from config
@@ -679,6 +692,10 @@ class ConferencesController extends AppController
             $conference = $this->Conferences->get($id, contain: ['Tags']);
 
             $mailer = $this->prepEmail($id);
+            if (!$mailer){
+                $this->Flash->error(__('Mailer returned false, usually a validation error'));
+                return $this->render('view');
+            }
             //do something here
            
             //reset to for testing
