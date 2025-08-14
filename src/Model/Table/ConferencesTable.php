@@ -152,22 +152,30 @@ class ConferencesTable extends Table
             $rando=substr( str_shuffle( $chars ), 0, 8);
             $entity->set('edit_key',$rando);
         }
+        // trim spaces from email addresses & remove empty strings
+        $trimmed_email = \implode(",",$this->trimFilterCsv($entity->contact_email));
+        $entity->set('contact_email',$trimmed_email);
+        // debug($entity->contact_email);
+
         //no special handling for dates debug($entity) and you can see they are already Cake date objects
         return;
-
     }
 
     public function multiEmail($check, array $context): bool {
         $max_emails=Configure::read('maxEmailsPerSave');
-        $email_list = \explode(',',$check);
-       // debug($email_list);
+        $email_list = $this->trimFilterCsv($check);
+        // debug($email_list);
+        if (\count($email_list) > $max_emails) return false;
         $V = new \Cake\Validation\Validation;
-        $counter=0;
         foreach ($email_list as $email) {
-            if (!$V->email(trim($email))) return false;
-            $counter++;
-            if ($counter>$max_emails) return false;
+            if (!$V->email($email)) return false;
         }
         return true;
+    }
+
+    public function trimFilterCsv($check) {
+        // trim spaces and remove empty from comma-separated string
+        // returns array
+        return \array_filter(\array_map('trim',\explode(",",$check)));
     }
 }
