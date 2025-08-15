@@ -15,13 +15,22 @@ use Cake\I18n\FrozenDate;
 use Cake\Mailer\Mailer;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\NotImplementedException;
+use Cake\Network\Exception\SocketException;
 use Cake\Error\Debugger;
 use Cake\Log\Log;
 use Cake\Routing\Router;
-
+use Cake\Log\Engine\FileLog;
 
 Date::setToStringFormat('yyyy-MM-dd');
 FrozenDate::setToStringFormat('yyyy-MM-dd');
+
+Log::setConfig('conflist', [
+    'className' => FileLog::class,
+    'path' => LOGS,
+    'levels' => [],
+    'scopes' => ['conflist'],
+    'file' => 'conflist.log',
+]);
 
 /**
  * Conferences Controller
@@ -377,7 +386,7 @@ class ConferencesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add($tagstring=''){
-        if (Configure::read('maintenance.readOnly')) {
+        if (Configure::read('readOnly')) {
             $this->Flash->error(__('add method temporarily disabled for site maintenance'));
             $this->redirect(['action' => 'maintenance']);
         }
@@ -394,7 +403,7 @@ class ConferencesController extends AppController
                 // adds entry in logs/debug.log, with 'info' prefix
                 Log::write('info',
                            'Honeypot trigger: title={title}, email={email}',
-                           ['title' => $this->request->getData()['title'],
+                           ['scope'=>['conflist'],'title' => $this->request->getData()['title'],
                             'email' => $this->request->getData()['contact_email']
                            ]);
                 //do nothing but pretend to save.
@@ -563,11 +572,22 @@ class ConferencesController extends AppController
         // verify that all data saves
         if ($this->Conferences->save($conference)) {
             $this->Flash->success(__('The announcement has been saved.'));
-
             $mailer = $this->prepEmail($conference->id);
-            if ($mailer->deliver()) {
-                $this->Flash->success(__('Confirmation emails have been sent.'));
+            
+            if ($mailer){
+                $delivered=false;
+                try{
+                    $delivered=$mailer->deliver();
+                }
+                catch (\Throwable $e){
+                    Log::write('error',"Failed to send email for conference {id}  {message}\n",['scope'=>['conflist'],'id'=>$conference->id,'message'=>$e->getMessage()]);
+                }
+                
+                if ($delivered) {
+                    $this->Flash->success(__('Confirmation emails have been sent.'));
+                }   
             }
+            
             return $this->redirect(['action' => 'index']);
         }
         // else: save has failed
@@ -629,7 +649,16 @@ class ConferencesController extends AppController
         //gather and set values from $conference data
         $mailer->setSubject($conference->title);
         $to_array = preg_split("/[\s,]+/",$conference->contact_email);
-        $mailer->setTo($to_array); //does setTo still take an array argument??
+
+        try{
+            $mailer->setTo($to_array);
+        } 
+        catch (\Throwable $e){
+            //email failed
+            //debug($e);
+            Log::write('error',"setTo failed for conference {id}  {message}\n",['scope'=>['conflist'],'id'=>$conference->id,'message'=>$e->getMessage()]);
+            return false;
+        }
 
 
         //gather values from config
@@ -663,6 +692,10 @@ class ConferencesController extends AppController
             $conference = $this->Conferences->get($id, contain: ['Tags']);
 
             $mailer = $this->prepEmail($id);
+            if (!$mailer){
+                $this->Flash->error(__('Mailer returned false, usually a validation error'));
+                return $this->render('view');
+            }
             //do something here
            
             //reset to for testing
@@ -677,11 +710,11 @@ class ConferencesController extends AppController
             //NOTE: this doesn't do much because the SocketException is caught in the framework before this
             $delivered=false;
             try{
-                $mailer->deliver();
-                $delivered=true;
+                $delivered=$mailer->deliver();
             }
-            catch (Exception $e){
-                debug($e);
+            catch (SocketException $e){
+                Log::write('error',"Failed to send test email for conference {id}  {message}\n",['scope'=>['conflist'],'id'=>$id,'message'=>$e->getMessage()]);
+                debug($e); //debug inside curatorCookie test
             }
 
             if ($delivered) {
