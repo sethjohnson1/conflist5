@@ -36,7 +36,7 @@ echo $this->Html->css('https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/sele
 echo $this->Html->script('https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js') ."\n";
 
 
-echo $this->Html->script('select2_fields') ."\n";  //configuration for conflist app
+echo $this->Html->script('select2_fields.js?v=11') ."\n";  //configuration for conflist app
 
 echo $this->fetch('meta');
 echo $this->fetch('css');
