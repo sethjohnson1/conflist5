@@ -53,11 +53,10 @@ $('#homepage').on('change',function(){
 });
 
 //https://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
+//updated    
 function getValidUrl(url){
-    // let newUrl = window.decodeURIComponent(url); //don't decode the URI
-    // newUrl = newUrl.trim().replace(/\s/g, ""); //spaces are valid in URLs, so trimming is not cool
-    if(/^(:\/\/)/.test(newUrl)) return `http${newUrl}`;
-    if(!/^(f|ht)tps?:\/\//i.test(newUrl)) return `https://${newUrl}`;
+    newUrl = url.trim() // remove space from beginning and end
+    if(!/^https?:\/\//i.test(newUrl)) return `https://${newUrl}`;
     return newUrl;
 };
 
